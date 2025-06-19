@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import { getCohereResponse } from "../lib/cohere";
-import { getElevenLabsAudio } from "../lib/elevenlabs";
+// import { getElevenLabsAudio } from "../lib/elevenlabs";
 
 export default function AiTTSChat() {
   const [prompt, setPrompt] = useState("");
@@ -10,7 +10,7 @@ export default function AiTTSChat() {
   const [audioUrl, setAudioUrl] = useState<string>("");
   const [persona, setPersona] = useState<string>("");
   const [systemPrompt, setSystemPrompt] = useState<string>("");
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  // const audioRef = useRef<HTMLAudioElement | null>(null);
 
   function handleFileUpload(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -43,21 +43,22 @@ ${prompt.trim()}`
       const cohereResponse = await getCohereResponse(fullPrompt, systemPrompt);
       setSubtitle(cohereResponse);
 
-      const {
-        url: audioUrl,
-        blob,
-        type,
-      } = await getElevenLabsAudio(cohereResponse);
-      console.log("Audio blob type:", type, "size:", blob.size);
-      setAudioUrl(audioUrl);
-      setTimeout(() => {
-        if (audioRef.current) {
-          audioRef.current.play().catch((err) => {
-            console.error("Audio playback failed:", err);
-            setSubtitle("Audio playback failed: " + err.message);
-          });
-        }
-      }, 100);
+      // Disabled ElevenLabs TTS
+      // const {
+      //   url: audioUrl,
+      //   blob,
+      //   type,
+      // } = await getElevenLabsAudio(cohereResponse);
+      // console.log("Audio blob type:", type, "size:", blob.size);
+      // setAudioUrl(audioUrl);
+      // setTimeout(() => {
+      //   if (audioRef.current) {
+      //     audioRef.current.play().catch((err) => {
+      //       console.error("Audio playback failed:", err);
+      //       setSubtitle("Audio playback failed: " + err.message);
+      //     });
+      //   }
+      // }, 100);
     } catch (err) {
       setSubtitle("Error: " + (err as Error).message);
     }
@@ -67,7 +68,7 @@ ${prompt.trim()}`
 
   return (
     <div>
-      <h1>AI Chat (Cohere + ElevenLabs TTS)</h1>
+      <h1>AI Chat (Cohere)</h1>
       <div style={{ margin: "20px 0" }}>
         <label>
           Persona (.txt):
@@ -122,13 +123,13 @@ ${prompt.trim()}`
           </pre>
         </div>
       )}
-      <audio
+      {/* <audio
         ref={audioRef}
         controls
         src={audioUrl}
         autoPlay
         style={{ display: audioUrl ? "block" : "none", margin: "20px 0" }}
-      />
+      /> */}
       <div style={{ margin: "20px 0" }}>
         <input
           type='text'
