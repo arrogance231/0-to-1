@@ -1,7 +1,11 @@
-export async function getCohereResponse(userPrompt: string): Promise<string> {
+export async function getCohereResponse(
+  userPrompt: string,
+  systemPrompt?: string
+): Promise<string> {
   const apiKey = process.env.NEXT_PUBLIC_COHERE_API_KEY || "COHERE-API-KEY";
-  const systemPrompt = `You are a Filipino lola (grandmother). You are warm, caring, and wise, always sharing advice and stories from your life in the Philippines. You speak ONLY in Tagalog, never in English or any other language. Respond thoughtfully and helpfully, as a loving lola would, always using Tagalog words and expressions.`;
-  const prompt = `${systemPrompt}\n\n${userPrompt}`;
+  const prompt = systemPrompt
+    ? `${systemPrompt.trim()}\n\n${userPrompt}`
+    : userPrompt;
   const response = await fetch("https://api.cohere.ai/v1/generate", {
     method: "POST",
     headers: {

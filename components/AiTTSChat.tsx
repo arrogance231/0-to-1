@@ -9,14 +9,21 @@ export default function AiTTSChat() {
   const [loading, setLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string>("");
   const [persona, setPersona] = useState<string>("");
+  const [systemPrompt, setSystemPrompt] = useState<string>("");
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleFileUpload(
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "persona" | "system"
+  ) {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (event) => {
-      setPersona((event.target?.result as string) || "");
+      if (type === "persona")
+        setPersona((event.target?.result as string) || "");
+      if (type === "system")
+        setSystemPrompt((event.target?.result as string) || "");
     };
     reader.readAsText(file);
   }
@@ -26,17 +33,16 @@ export default function AiTTSChat() {
     setLoading(true);
     setSubtitle("");
     try {
-      // 1. Prepend persona to the prompt if available
+      // Compose the full prompt
       const fullPrompt = persona
         ? `${persona.trim()}
 
 ${prompt.trim()}`
         : prompt.trim();
-      // 2. Get response from Cohere
-      const cohereResponse = await getCohereResponse(fullPrompt);
+      // Pass systemPrompt as the system prompt
+      const cohereResponse = await getCohereResponse(fullPrompt, systemPrompt);
       setSubtitle(cohereResponse);
 
-      // 3. TTS the Cohere response with ElevenLabs
       const {
         url: audioUrl,
         blob,
@@ -68,7 +74,7 @@ ${prompt.trim()}`
           <input
             type='file'
             accept='.txt'
-            onChange={handleFileUpload}
+            onChange={(e) => handleFileUpload(e, "persona")}
             style={{ marginLeft: 8 }}
             disabled={loading}
           />
@@ -86,6 +92,34 @@ ${prompt.trim()}`
         >
           <strong>Persona:</strong>
           <pre style={{ whiteSpace: "pre-wrap", margin: 0 }}>{persona}</pre>
+        </div>
+      )}
+      <div style={{ margin: "20px 0" }}>
+        <label>
+          System Prompt (.txt):
+          <input
+            type='file'
+            accept='.txt'
+            onChange={(e) => handleFileUpload(e, "system")}
+            style={{ marginLeft: 8 }}
+            disabled={loading}
+          />
+        </label>
+      </div>
+      {systemPrompt && (
+        <div
+          style={{
+            margin: "10px 0",
+            padding: 10,
+            background: "#f0f8ff",
+            border: "1px solid #99c",
+            borderRadius: 4,
+          }}
+        >
+          <strong>System Prompt:</strong>
+          <pre style={{ whiteSpace: "pre-wrap", margin: 0 }}>
+            {systemPrompt}
+          </pre>
         </div>
       )}
       <audio
