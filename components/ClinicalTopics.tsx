@@ -8,7 +8,7 @@ const ClinicalTopics = () => {
       <h2 className='text-xl font-bold text-gray-800 mb-4'>
         Latest Clinical Topics
       </h2>
-      <div className='flex gap-2'>
+      <div className='flex gap-2 overflow-x-auto sm:overflow-x-visible sm:flex-wrap'>
         {topics.map((topic, index) => (
           <div
             key={index}

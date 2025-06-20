@@ -4,9 +4,9 @@ const Analytics: React.FC = () => {
   return (
     <div className='p-4 rounded-lg bg-white shadow-lg mb-6'>
       <h2 className='text-lg font-bold text-gray-800 mb-3'>Your Analytics</h2>
-      <div className='flex gap-4'>
+      <div className='flex flex-wrap gap-4'>
         {/* 7-Day Accuracy */}
-        <div className='flex-1 bg-white rounded-xl border border-gray-100 p-4 flex flex-col items-start min-w-[160px]'>
+        <div className='flex-1 bg-white rounded-xl border border-gray-100 p-4 flex flex-col items-start min-w-[140px] max-w-[220px]'>
           <div className='flex items-center gap-2 mb-2'>
             <span className='font-semibold text-sm text-gray-700'>
               7-Day Accuracy
@@ -29,7 +29,7 @@ const Analytics: React.FC = () => {
           </svg>
         </div>
         {/* Daily Cases */}
-        <div className='flex-1 bg-white rounded-xl border border-gray-100 p-4 flex flex-col items-start min-w-[160px]'>
+        <div className='flex-1 bg-white rounded-xl border border-gray-100 p-4 flex flex-col items-start min-w-[140px] max-w-[220px]'>
           <div className='flex items-center gap-2 mb-2'>
             <span className='font-semibold text-sm text-gray-700'>
               Daily Cases
