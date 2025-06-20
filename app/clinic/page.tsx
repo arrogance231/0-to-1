@@ -12,15 +12,8 @@ import Loading from "@/components/Loading";
 
 const ClinicPage = () => {
   const router = useRouter();
-  const {
-    notes,
-    updateNotes,
-    customPatientParams,
-    setCustomPatient,
-    messages,
-    patient,
-    isStateLoaded,
-  } = useChat();
+  const { notes, updateNotes, setCustomPatient, patient, isStateLoaded } =
+    useChat();
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isNoteModalOpen, setIsNoteModalOpen] = React.useState(false);
@@ -63,10 +56,7 @@ const ClinicPage = () => {
       </div>
       {/* ClinicTTSVisualizer centered, squashed */}
       <div className='flex-1 min-h-0 flex flex-col items-center justify-center w-full pb-20'>
-        <ClinicTTSVisualizer
-          onClose={() => router.push("/chat")}
-          squashContent={true}
-        />
+        <ClinicTTSVisualizer squashContent={true} />
       </div>
       <Footer isFixed={true} />
     </div>

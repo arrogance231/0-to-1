@@ -34,7 +34,9 @@ export default async function handler(
     res.setHeader("Content-Disposition", 'inline; filename="speech.mp3"');
     const buffer = Buffer.from(await ttsRes.arrayBuffer());
     res.status(200).send(buffer);
-  } catch (err: any) {
-    res.status(500).json({ error: err.message || "TTS error" });
+  } catch (err: unknown) {
+    res
+      .status(500)
+      .json({ error: err instanceof Error ? err.message : "TTS error" });
   }
 }

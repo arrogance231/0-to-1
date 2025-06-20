@@ -27,7 +27,9 @@ export default async function handler(
     });
     const text = completion.choices?.[0]?.message?.content || "";
     res.status(200).json({ text });
-  } catch (err: any) {
-    res.status(500).json({ error: err.message || "OpenAI error" });
+  } catch (err: unknown) {
+    res
+      .status(500)
+      .json({ error: err instanceof Error ? err.message : "OpenAI error" });
   }
 }

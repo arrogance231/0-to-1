@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import React, { useState } from "react";
 import { getOpenAIResponse } from "../lib/openai";
 // import { getElevenLabsAudio } from "../lib/elevenlabs";
 
@@ -7,7 +7,6 @@ export default function AiTTSChat() {
   const [prompt, setPrompt] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [loading, setLoading] = useState(false);
-  const [audioUrl, setAudioUrl] = useState<string>("");
   const [persona, setPersona] = useState<string>("");
   const [systemPrompt, setSystemPrompt] = useState<string>("");
   // const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -156,4 +155,3 @@ ${prompt.trim()}`
     </div>
   );
 }
- 

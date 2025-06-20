@@ -4,12 +4,14 @@ interface WavyCircleVisualizerProps {
   analyser: AnalyserNode | null;
   isActive: boolean;
   size?: number;
+  color?: string;
 }
 
 const WavyCircleVisualizer: React.FC<WavyCircleVisualizerProps> = ({
   analyser,
   isActive,
   size = 292, // match the outermost border size in ClinicTTSVisualizer
+  color = "#fff",
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -24,8 +26,6 @@ const WavyCircleVisualizer: React.FC<WavyCircleVisualizerProps> = ({
     const dataArray = new Uint8Array(bufferLength);
     const center = size / 2;
     const mainCircleRadius = 220 / 2; // main blue circle radius
-    const staticBorder = 0; // static white border thickness (removed)
-    const gap = 0; // gap between static border and wavy border (removed)
     const borderWidth = 16; // wavy border thickness (reduced)
     const minR = mainCircleRadius + borderWidth / 2; // always outside main circle
     const points = 128;
@@ -55,9 +55,9 @@ const WavyCircleVisualizer: React.FC<WavyCircleVisualizerProps> = ({
         else ctx.lineTo(x, y);
       }
       ctx.closePath();
-      ctx.shadowColor = "#fff";
+      ctx.shadowColor = color;
       ctx.shadowBlur = 24;
-      ctx.strokeStyle = "#fff";
+      ctx.strokeStyle = color;
       ctx.lineWidth = borderWidth;
       ctx.stroke();
       ctx.restore();
@@ -68,7 +68,7 @@ const WavyCircleVisualizer: React.FC<WavyCircleVisualizerProps> = ({
       cancelAnimationFrame(raf);
       if (ctx) ctx.clearRect(0, 0, size, size);
     };
-  }, [analyser, isActive, size]);
+  }, [analyser, isActive, size, color]);
 
   return (
     <canvas

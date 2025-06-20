@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ChatProvider } from "@/contexts/ChatContext";
 import Head from "next/head";
-import Script from "next/script";
 import { ReactNode } from "react";
 import Background from "@/components/Background";
 

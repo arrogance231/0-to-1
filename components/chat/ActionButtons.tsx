@@ -1,11 +1,6 @@
 import Image from "next/image";
 import React from "react";
 
-// You can replace these with actual SVG icons later
-const PencilIcon = () => <span className='w-5 h-5'>📝</span>;
-const NoteIcon = () => <span className='w-5 h-5'>🗒️</span>;
-const UploadIcon = () => <span className='w-5 h-5'>↑</span>;
-
 interface ActionButtonsProps {
   onCustomPatientClick: () => void;
   onNoteTakingClick: () => void;

@@ -2,29 +2,60 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
-const NUM_CIRCLES = 10;
-const CIRCLE_SIZE = [40, 60, 80, 100];
+const MOBILE_CIRCLES = 10;
+const DESKTOP_CIRCLES = 24;
+const CIRCLE_SIZE_MOBILE = [32, 48, 64, 80];
+const CIRCLE_SIZE_DESKTOP = [48, 64, 80, 100, 120];
 const CIRCLE_ANIM = [
   "float1 12s ease-in-out infinite",
   "float2 16s ease-in-out infinite",
   "float3 20s ease-in-out infinite",
   "float4 18s ease-in-out infinite",
+  "drift1 22s linear infinite",
+  "drift2 28s linear infinite",
 ];
 
-function generateCircles() {
-  return Array.from({ length: NUM_CIRCLES }).map((_, i) => {
-    const size = CIRCLE_SIZE[Math.floor(Math.random() * CIRCLE_SIZE.length)];
+interface Circle {
+  size: number;
+  left: number;
+  top: number;
+  anim: string;
+  key: number;
+  opacity: number;
+}
+
+function isDesktop() {
+  if (typeof window === "undefined") return false;
+  return window.innerWidth >= 768;
+}
+
+function generateCircles(desktop: boolean) {
+  const num = desktop ? DESKTOP_CIRCLES : MOBILE_CIRCLES;
+  const sizes = desktop ? CIRCLE_SIZE_DESKTOP : CIRCLE_SIZE_MOBILE;
+  return Array.from({ length: num }).map((_, i) => {
+    const size = sizes[Math.floor(Math.random() * sizes.length)];
     const left = Math.random() * 90; // percent
-    const top = Math.random() * 65 + 5; // percent, avoid bottom 30%
-    const anim = CIRCLE_ANIM[Math.floor(Math.random() * CIRCLE_ANIM.length)];
-    return { size, left, top, anim, key: i };
+    const top = Math.random() * (desktop ? 80 : 65) + 5; // percent
+    const anim =
+      CIRCLE_ANIM[
+        Math.floor(Math.random() * (desktop ? CIRCLE_ANIM.length : 4))
+      ];
+    const opacity = desktop
+      ? Math.random() * 0.4 + 0.4
+      : Math.random() * 0.3 + 0.5;
+    return { size, left, top, anim, key: i, opacity };
   });
 }
 
 const Background: React.FC = () => {
-  const [circles, setCircles] = useState<any[]>([]);
+  const [circles, setCircles] = useState<Circle[]>([]);
   useEffect(() => {
-    setCircles(generateCircles());
+    const updateCircles = () => {
+      setCircles(generateCircles(isDesktop()));
+    };
+    updateCircles();
+    window.addEventListener("resize", updateCircles);
+    return () => window.removeEventListener("resize", updateCircles);
   }, []);
 
   return (
@@ -39,7 +70,7 @@ const Background: React.FC = () => {
         priority
       />
       {/* Floating circles (only after mount) */}
-      {circles.map(({ size, left, top, anim, key }) => (
+      {circles.map(({ size, left, top, anim, key, opacity }) => (
         <div
           key={key}
           style={{
@@ -50,6 +81,7 @@ const Background: React.FC = () => {
             height: size,
             zIndex: 2,
             animation: anim,
+            opacity,
           }}
         >
           <Image
@@ -57,7 +89,7 @@ const Background: React.FC = () => {
             alt='Floating Circle'
             width={size}
             height={size}
-            style={{ opacity: 0.7 }}
+            style={{ opacity: 1, width: "100%", height: "100%" }}
           />
         </div>
       ))}
@@ -72,7 +104,7 @@ const Background: React.FC = () => {
           priority
         />
       </div>
-      {/* Keyframes for floating animation */}
+      {/* Keyframes for floating and drifting animation */}
       <style jsx global>{`
         @keyframes float1 {
           0% {
@@ -116,6 +148,34 @@ const Background: React.FC = () => {
           }
           100% {
             transform: translateY(0px) scale(1);
+          }
+        }
+        @keyframes drift1 {
+          0% {
+            transform: translateX(0px) scale(1);
+          }
+          50% {
+            transform: translateX(60px) scale(1.1);
+          }
+          100% {
+            transform: translateX(0px) scale(1);
+          }
+        }
+        @keyframes drift2 {
+          0% {
+            transform: translateX(0px) scale(1);
+          }
+          50% {
+            transform: translateX(-80px) scale(0.95);
+          }
+          100% {
+            transform: translateX(0px) scale(1);
+          }
+        }
+        @media (min-width: 768px) {
+          /* Desktop: more bubbles, larger, slower, more drifting */
+          .bubble {
+            filter: blur(0.5px);
           }
         }
       `}</style>

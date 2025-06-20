@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import PatientHeader from "@/components/chat/PatientHeader";
 import ActionButtons from "@/components/chat/ActionButtons";
 import ChatMessages from "@/components/chat/ChatMessages";
 import ChatInput from "@/components/chat/ChatInput";
@@ -12,8 +11,6 @@ import CustomPatientModal, {
   CustomPatientParams,
 } from "@/components/chat/CustomPatientModal";
 import NoteTakingModal from "@/components/chat/NoteTakingModal";
-import ClinicTTSVisualizer from "@/components/chat/ClinicTTSVisualizer";
-import AnimatedMicButton from "@/components/chat/AnimatedMicButton";
 import Loading from "@/components/Loading";
 
 interface Message {

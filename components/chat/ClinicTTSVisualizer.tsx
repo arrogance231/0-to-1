@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import AnimatedMicButton from "./AnimatedMicButton";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -7,28 +6,19 @@ import { getOpenAIResponse, getOpenAITTSUrl } from "../../lib/openai";
 import { useChat } from "../../contexts/ChatContext";
 import WavyCircleVisualizer from "./WavyCircleVisualizer";
 import Image from "next/image";
-import ActionButtons from "@/components/chat/ActionButtons";
-
-const avatarUrl = "/matt.svg"; // Replace with actual avatar if needed
 
 const ClinicTTSVisualizer: React.FC<{
-  onClose: () => void;
   squashContent?: boolean;
-}> = ({ onClose, squashContent = false }) => {
-  const [aiResponse, setAiResponse] = useState("");
+}> = ({ squashContent = false }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [amplitude, setAmplitude] = useState(0);
-  const [error, setError] = useState<string | null>(null);
-  const [status, setStatus] = useState<string>("");
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
-  const animationFrameRef = useRef<number | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
-  const [language, setLanguage] = useState<string>("fil-PH");
   const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
   const [closeActive, setCloseActive] = useState(false);
+  const [ttsError, setTTSError] = useState<string | null>(null);
 
   // Speech recognition
   const {
@@ -45,21 +35,21 @@ const ClinicTTSVisualizer: React.FC<{
     { from: "user" | "ai"; text: string; evaluation?: string }[]
   >([]);
 
+  // Determine wavy circle color based on difficulty
+  let wavyColor = "#279FD5"; // default blue
+  if (patient?.difficulty === "Advanced") wavyColor = "#EC5638"; // orange
+  if (patient?.difficulty === "Expert") wavyColor = "#B91C1C"; // red
+
   // Handle mic button click
   const handleMicClick = () => {
-    setError(null);
-    setAiResponse("");
-    setStatus("");
     if (!browserSupportsSpeechRecognition) {
-      setError("Speech recognition not supported in this browser.");
       return;
     }
     if (listening) {
       SpeechRecognition.stopListening();
     } else {
       resetTranscript();
-      setStatus("Listening...");
-      SpeechRecognition.startListening({ continuous: false, language });
+      SpeechRecognition.startListening({ continuous: false });
     }
   };
 
@@ -73,7 +63,8 @@ const ClinicTTSVisualizer: React.FC<{
     // Setup Web Audio API for visualization
     if (!audioCtxRef.current) {
       audioCtxRef.current = new (window.AudioContext ||
-        (window as any).webkitAudioContext)();
+        (window as unknown as { webkitAudioContext: typeof AudioContext })
+          .webkitAudioContext)();
     }
     const audioCtx = audioCtxRef.current;
 
@@ -88,19 +79,15 @@ const ClinicTTSVisualizer: React.FC<{
     analyserRef.current.connect(audioCtx.destination);
     setAnalyser(analyserRef.current);
 
-    setIsSpeaking(true);
-    setStatus("Playing response...");
-
     // Use the passed answer directly
-    let finalAnswer =
+    const finalAnswer =
       answer && answer.trim()
         ? answer.trim()
         : "[AI response error: No valid answer returned. Please try again.]";
 
     audioRef.current.onended = () => {
-      setIsSpeaking(false);
-      setStatus("");
       setAnalyser(null);
+      setIsSpeaking(false);
     };
 
     let fallbackTimer: NodeJS.Timeout | null = null;
@@ -112,11 +99,12 @@ const ClinicTTSVisualizer: React.FC<{
     };
     audioRef.current.onplay = () => {
       if (fallbackTimer) clearTimeout(fallbackTimer);
+      setIsSpeaking(true);
       addAnswerToHistory();
     };
     audioRef.current.onerror = () => {
       if (fallbackTimer) clearTimeout(fallbackTimer);
-      setError("Audio playback failed. Showing answer only.");
+      setIsSpeaking(false);
       addAnswerToHistory();
     };
     fallbackTimer = setTimeout(() => {
@@ -131,9 +119,7 @@ const ClinicTTSVisualizer: React.FC<{
     if (!listening && transcript.trim()) {
       (async () => {
         setIsLoading(true);
-        setError(null);
-        setAiResponse("");
-        setStatus("Prompt received. Sending to AI...");
+        setTTSError(null);
         try {
           // Build conversation history string
           const history = [
@@ -149,13 +135,8 @@ const ClinicTTSVisualizer: React.FC<{
           ]
             .map((m) => `${m.sender}: ${m.text}`)
             .join("\n");
-          let promptToSend = history;
-          if (language === "fil-PH") {
-            promptToSend += "\nThe answer must be in Filipino/Tagalog.";
-          }
+          const promptToSend = history;
           const response = await getOpenAIResponse(promptToSend);
-          setAiResponse(response);
-          setStatus("Generating voice with OpenAI TTS...");
           try {
             const audioUrl = await getOpenAITTSUrl(
               response,
@@ -164,19 +145,25 @@ const ClinicTTSVisualizer: React.FC<{
               1.0
             );
             await playAudioWithVisualizer(audioUrl, response);
-          } catch (err: any) {
-            setError("OpenAI TTS failed: " + (err.message || "Unknown error"));
-            setStatus("");
+          } catch (err) {
+            setTTSError("TTS failed to generate audio. Please try again.");
+            if (err instanceof Error) {
+              console.error("TTS error:", err.message);
+            } else {
+              console.error("TTS error:", err);
+            }
           }
-        } catch (err: any) {
-          setError(err.message || "Error getting response");
-          setStatus("");
+        } catch (err) {
+          setTTSError("Failed to get AI response. Please try again.");
+          if (err instanceof Error) {
+            console.error("AI error:", err.message);
+          } else {
+            console.error("AI error:", err);
+          }
         } finally {
           setIsLoading(false);
         }
       })();
-    } else if (listening) {
-      setStatus("Listening...");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listening]);
@@ -229,16 +216,16 @@ const ClinicTTSVisualizer: React.FC<{
             analyser={analyser}
             isActive={isSpeaking}
             size={292}
+            color={wavyColor}
           />
           <div
             className='flex items-center justify-center rounded-full shadow-xl transition-all duration-100 bg-[#279FD5]'
             style={{
               width: 220,
               height: 220,
-              boxShadow:
-                amplitude > 0.1
-                  ? `0 0 ${16 + amplitude * 24}px #279FD5aa`
-                  : "0 2px 16px #279FD5aa",
+              boxShadow: isSpeaking
+                ? `0 0 ${16 + 24}px #279FD5aa`
+                : "0 2px 16px #279FD5aa",
               position: "absolute",
               top: 36,
               left: 36,
@@ -285,60 +272,72 @@ const ClinicTTSVisualizer: React.FC<{
       </div>
       {/* Mic Button and Transition Button - centered at the bottom of the main content */}
       <div
-        className='flex justify-center items-center w-full gap-6 mt-6 mb-2'
+        className='flex flex-col items-center w-full gap-2 mt-6 mb-2'
         style={{ flex: "none" }}
       >
-        {/* Mic Button */}
-        <button
-          className={`rounded-full bg-[#EC5638] shadow-xl flex items-center justify-center transition-all duration-200 ${
-            listening ? "scale-110 ring-4 ring-[#EC5638]/30" : "hover:scale-110"
-          }`}
-          style={{ width: 80, height: 80 }}
-          onClick={handleMicClick}
-          disabled={isLoading || isSpeaking}
-          aria-label={listening ? "Stop listening" : "Start listening"}
-        >
-          <svg
-            width='40'
-            height='40'
-            viewBox='0 0 24 24'
-            fill='none'
-            stroke='#fff'
-            strokeWidth='2.5'
-            strokeLinecap='round'
-            strokeLinejoin='round'
+        <div className='flex justify-center items-center w-full gap-6'>
+          {/* Mic Button */}
+          <button
+            className={`rounded-full bg-[#EC5638] shadow-xl flex items-center justify-center transition-all duration-200 ${
+              listening
+                ? "scale-110 ring-4 ring-[#EC5638]/30"
+                : "hover:scale-110"
+            }`}
+            style={{ width: 80, height: 80 }}
+            onClick={handleMicClick}
+            disabled={isLoading || isSpeaking}
+            aria-label={listening ? "Stop listening" : "Start listening"}
           >
-            <rect x='9' y='2' width='6' height='12' rx='3' />
-            <path d='M5 10v2a7 7 0 0 0 14 0v-2' />
-            <line x1='12' y1='19' x2='12' y2='22' />
-            <line x1='8' y1='22' x2='16' y2='22' />
-          </svg>
-        </button>
-        {/* Transition Button */}
-        <button
-          className={`rounded-full bg-[#EC5638] shadow-xl flex items-center justify-center transition-all duration-300 focus:outline-none
-            ${closeActive ? "scale-110" : "hover:scale-110"}
-          `}
-          style={{ width: 64, height: 64 }}
-          onClick={() => {
-            setCloseActive(true);
-            setTimeout(() => {
-              setCloseActive(false);
-              window.location.href = "/chat";
-            }, 300);
-          }}
-          aria-label='Back to Chat'
-        >
-          <Image
-            src='/chat-icon.svgg.svg'
-            alt='Back to Chat'
-            width={36}
-            height={36}
-            style={{
-              filter: closeActive ? undefined : "grayscale(1) brightness(0.7)",
+            <svg
+              width='40'
+              height='40'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='#fff'
+              strokeWidth='2.5'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            >
+              <rect x='9' y='2' width='6' height='12' rx='3' />
+              <path d='M5 10v2a7 7 0 0 0 14 0v-2' />
+              <line x1='12' y1='19' x2='12' y2='22' />
+              <line x1='8' y1='22' x2='16' y2='22' />
+            </svg>
+          </button>
+          {/* Transition Button */}
+          <button
+            className={`rounded-full bg-[#EC5638] shadow-xl flex items-center justify-center transition-all duration-300 focus:outline-none
+              ${closeActive ? "scale-110" : "hover:scale-110"}
+            `}
+            style={{ width: 64, height: 64 }}
+            onClick={() => {
+              setCloseActive(true);
+              setTimeout(() => {
+                setCloseActive(false);
+                window.location.href = "/chat";
+              }, 300);
             }}
-          />
-        </button>
+            aria-label='Back to Chat'
+          >
+            <Image
+              src='/chat-icon.svgg.svg'
+              alt='Back to Chat'
+              width={36}
+              height={36}
+              style={{
+                filter: closeActive
+                  ? undefined
+                  : "grayscale(1) brightness(0.7)",
+              }}
+            />
+          </button>
+        </div>
+        {/* TTS Error Message */}
+        {ttsError && (
+          <div className='text-red-600 text-sm mt-2 text-center max-w-xs'>
+            {ttsError}
+          </div>
+        )}
       </div>
       {/* Hidden audio element for TTS playback */}
       <audio ref={audioRef} hidden />
