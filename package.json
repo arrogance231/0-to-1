@@ -9,15 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@pinecone-database/pinecone": "^6.1.1",
     "cohere-ai": "^7.17.1",
-    "formidable": "^3.5.4",
     "microsoft-cognitiveservices-speech-sdk": "^1.44.1",
     "next": "15.3.3",
-    "pdf-parse": "^1.1.1",
+    "openai": "^5.5.1",
     "pixi-live2d-display-lipsyncpatch": "^0.5.0-ls-8",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-speech-recognition": "^4.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

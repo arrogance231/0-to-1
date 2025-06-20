@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import { getCohereResponse } from "../lib/cohere";
+import { getOpenAIResponse } from "../lib/openai";
 // import { getElevenLabsAudio } from "../lib/elevenlabs";
 
 export default function AiTTSChat() {
@@ -40,15 +40,15 @@ export default function AiTTSChat() {
 ${prompt.trim()}`
         : prompt.trim();
       // Pass systemPrompt as the system prompt
-      const cohereResponse = await getCohereResponse(fullPrompt, systemPrompt);
-      setSubtitle(cohereResponse);
+      const openaiResponse = await getOpenAIResponse(fullPrompt, systemPrompt);
+      setSubtitle(openaiResponse);
 
       // Disabled ElevenLabs TTS
       // const {
       //   url: audioUrl,
       //   blob,
       //   type,
-      // } = await getElevenLabsAudio(cohereResponse);
+      // } = await getElevenLabsAudio(openaiResponse);
       // console.log("Audio blob type:", type, "size:", blob.size);
       // setAudioUrl(audioUrl);
       // setTimeout(() => {
@@ -67,98 +67,93 @@ ${prompt.trim()}`
   }
 
   return (
-    <div>
-      <h1>AI Chat (Cohere)</h1>
-      <div style={{ margin: "20px 0" }}>
-        <label>
-          Persona (.txt):
+    <div className='max-w-md mx-auto'>
+      <h1 className='text-2xl font-bold text-center mb-6 text-gray-800'>
+        AI Chat
+      </h1>
+
+      <div className='space-y-4 mb-6'>
+        <div>
+          <label className='block text-sm font-medium text-gray-700 mb-2'>
+            Persona (.txt):
+          </label>
           <input
             type='file'
             accept='.txt'
             onChange={(e) => handleFileUpload(e, "persona")}
-            style={{ marginLeft: 8 }}
+            className='block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100'
             disabled={loading}
           />
-        </label>
-      </div>
-      {persona && (
-        <div
-          style={{
-            margin: "10px 0",
-            padding: 10,
-            background: "#f8f8f8",
-            border: "1px solid #ccc",
-            borderRadius: 4,
-          }}
-        >
-          <strong>Persona:</strong>
-          <pre style={{ whiteSpace: "pre-wrap", margin: 0 }}>{persona}</pre>
         </div>
-      )}
-      <div style={{ margin: "20px 0" }}>
-        <label>
-          System Prompt (.txt):
+
+        {persona && (
+          <div className='bg-blue-50 border border-blue-200 rounded-lg p-3'>
+            <strong className='text-sm font-medium text-blue-800'>
+              Persona:
+            </strong>
+            <pre className='text-sm text-blue-700 mt-1 whitespace-pre-wrap'>
+              {persona}
+            </pre>
+          </div>
+        )}
+
+        <div>
+          <label className='block text-sm font-medium text-gray-700 mb-2'>
+            System Prompt (.txt):
+          </label>
           <input
             type='file'
             accept='.txt'
             onChange={(e) => handleFileUpload(e, "system")}
-            style={{ marginLeft: 8 }}
+            className='block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100'
             disabled={loading}
           />
-        </label>
-      </div>
-      {systemPrompt && (
-        <div
-          style={{
-            margin: "10px 0",
-            padding: 10,
-            background: "#f0f8ff",
-            border: "1px solid #99c",
-            borderRadius: 4,
-          }}
-        >
-          <strong>System Prompt:</strong>
-          <pre style={{ whiteSpace: "pre-wrap", margin: 0 }}>
-            {systemPrompt}
-          </pre>
         </div>
-      )}
-      {/* <audio
-        ref={audioRef}
-        controls
-        src={audioUrl}
-        autoPlay
-        style={{ display: audioUrl ? "block" : "none", margin: "20px 0" }}
-      /> */}
-      <div style={{ margin: "20px 0" }}>
-        <input
-          type='text'
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          placeholder='Type your prompt'
-          style={{ width: 300, marginRight: 8 }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") handlePrompt();
-          }}
-          disabled={loading}
-        />
-        <button onClick={handlePrompt} disabled={loading}>
-          {loading ? "Loading..." : "Send"}
-        </button>
+
+        {systemPrompt && (
+          <div className='bg-green-50 border border-green-200 rounded-lg p-3'>
+            <strong className='text-sm font-medium text-green-800'>
+              System Prompt:
+            </strong>
+            <pre className='text-sm text-green-700 mt-1 whitespace-pre-wrap'>
+              {systemPrompt}
+            </pre>
+          </div>
+        )}
       </div>
-      {subtitle && (
-        <div
-          style={{
-            marginTop: 20,
-            textAlign: "center",
-            fontSize: "1.5rem",
-            color: "#333",
-            textShadow: "0 0 8px #fff",
-          }}
-        >
-          {subtitle}
+
+      <div className='space-y-4'>
+        <div className='flex gap-2'>
+          <input
+            type='text'
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            placeholder='Type your prompt...'
+            className='flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handlePrompt();
+            }}
+            disabled={loading}
+          />
+          <button
+            onClick={handlePrompt}
+            disabled={loading}
+            className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed'
+          >
+            {loading ? "..." : "Send"}
+          </button>
         </div>
-      )}
+
+        {subtitle && (
+          <div className='bg-white border border-gray-200 rounded-lg p-4 shadow-sm'>
+            <h3 className='text-sm font-medium text-gray-700 mb-2'>
+              Response:
+            </h3>
+            <p className='text-gray-800 leading-relaxed'>{subtitle}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+ 
