@@ -20,7 +20,7 @@ const news = [
 const TrendingMedicalNews: React.FC = () => {
   return (
     <div className='p-4 rounded-lg bg-white shadow-lg mb-6'>
-      <h2 className='text-lg font-bold text-gray-800 mb-3'>
+      <h2 className='text-lg font-bold text-gray-800 mb-3 font-bricolage'>
         Trending Medical News
       </h2>
       <div className='flex gap-4 overflow-x-auto pb-2'>
@@ -39,13 +39,13 @@ const TrendingMedicalNews: React.FC = () => {
               />
             </div>
             <div className='flex-1 flex flex-col'>
-              <div className='font-semibold text-sm text-gray-900 mb-1 line-clamp-2'>
+              <div className='font-semibold text-sm text-gray-900 mb-1 line-clamp-2 font-sans'>
                 {item.title}
               </div>
-              <div className='text-xs text-gray-500 mb-2'>
+              <div className='text-xs text-gray-500 mb-2 font-sans'>
                 {item.category} • {item.time}
               </div>
-              <span className='self-start bg-blue-100 text-blue-600 rounded-full px-3 py-1 text-xs font-semibold'>
+              <span className='self-start bg-blue-100 text-blue-600 rounded-full px-3 py-1 text-xs font-semibold font-sans'>
                 Study
               </span>
             </div>

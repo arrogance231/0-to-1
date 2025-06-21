@@ -34,26 +34,26 @@ const CaseCard = ({ caseData }: { caseData: Case }) => {
         } flex items-start justify-between px-4 py-2`}
       >
         <span
-          className={`text-xs font-semibold text-white px-2 py-1 rounded-lg mt-2 ${
+          className={`text-xs font-semibold text-white px-2 py-1 rounded-lg mt-2 font-sans ${
             badgeColors[caseData.difficulty]
           }`}
         >
           {caseData.difficulty}
         </span>
-        <span className='text-xs text-white font-semibold mt-2'>
+        <span className='text-xs text-white font-semibold mt-2 font-sans'>
           {caseData.time}
         </span>
       </div>
       <div className='flex-1 flex flex-col p-4'>
-        <h3 className='text-lg font-bold text-[#1E4462] mb-1'>
+        <h3 className='text-lg font-bold text-[#1E4462] mb-1 font-bricolage'>
           {caseData.title}
         </h3>
-        <p className='text-sm text-gray-600 mb-4 flex-1'>
+        <p className='text-sm text-gray-600 mb-4 flex-1 font-sans'>
           {caseData.description}
         </p>
         <button
           onClick={handleStartCase}
-          className='bg-[#279FD5] text-white font-semibold w-full py-2 rounded-lg hover:bg-[#1E4462] transition-all duration-200 mt-auto text-base'
+          className='bg-[#279FD5] text-white font-semibold w-full py-2 rounded-lg hover:bg-[#1E4462] transition-all duration-200 mt-auto text-base font-sans'
         >
           Start
         </button>
@@ -76,7 +76,9 @@ const BrowseCard = () => (
           />
         </svg>
       </span>
-      <span className='text-blue-600 font-semibold text-base'>Browse</span>
+      <span className='text-blue-600 font-semibold text-base font-sans'>
+        Browse
+      </span>
     </button>
   </div>
 );
@@ -86,10 +88,10 @@ const CasesPage = () => {
     <Suspense fallback={<Loading />}>
       <div className='p-4 space-y-6'>
         <header>
-          <h1 className='text-xl font-bold text-gray-800 mb-2'>
+          <h1 className='text-xl font-bold text-gray-800 mb-2 font-bricolage'>
             Clinical Cases
           </h1>
-          <p className='text-sm text-gray-500'>
+          <p className='text-sm text-gray-500 font-sans'>
             Select a case to begin your diagnosis simulation.
           </p>
         </header>

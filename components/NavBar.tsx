@@ -13,7 +13,7 @@ const NavBar = () => {
         {/* Center - icon.svg and PocketPatient text */}
         <div className='flex items-center gap-2'>
           <Image src='/icon.svg' alt='logo' width={32} height={32} />
-          <span className='text-white font-semibold text-lg'>
+          <span className='text-white font-semibold text-lg font-bricolage'>
             Pocket<span className='text-[#EC5638]'>Patient</span>
           </span>
         </div>

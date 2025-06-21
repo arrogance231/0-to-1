@@ -3,12 +3,14 @@ import React from "react";
 const Analytics: React.FC = () => {
   return (
     <div className='p-4 rounded-lg bg-white shadow-lg mb-6'>
-      <h2 className='text-lg font-bold text-gray-800 mb-3'>Your Analytics</h2>
+      <h2 className='text-lg font-bold text-gray-800 mb-3 font-bricolage'>
+        Your Analytics
+      </h2>
       <div className='flex flex-wrap gap-4'>
         {/* 7-Day Accuracy */}
         <div className='flex-1 bg-white rounded-xl border border-gray-100 p-4 flex flex-col items-start min-w-[140px] max-w-[220px]'>
           <div className='flex items-center gap-2 mb-2'>
-            <span className='font-semibold text-sm text-gray-700'>
+            <span className='font-semibold text-sm text-gray-700 font-sans'>
               7-Day Accuracy
             </span>
             <span className='w-2 h-2 rounded-full bg-blue-400 inline-block' />
@@ -31,13 +33,13 @@ const Analytics: React.FC = () => {
         {/* Daily Cases */}
         <div className='flex-1 bg-white rounded-xl border border-gray-100 p-4 flex flex-col items-start min-w-[140px] max-w-[220px]'>
           <div className='flex items-center gap-2 mb-2'>
-            <span className='font-semibold text-sm text-gray-700'>
+            <span className='font-semibold text-sm text-gray-700 font-sans'>
               Daily Cases
             </span>
             <span className='w-2 h-2 rounded-full bg-red-400 inline-block' />
           </div>
           {/* Placeholder for chart */}
-          <div className='w-full h-10 flex items-center justify-center text-gray-300 text-xs'>
+          <div className='w-full h-10 flex items-center justify-center text-gray-300 text-xs font-sans'>
             (No data)
           </div>
         </div>

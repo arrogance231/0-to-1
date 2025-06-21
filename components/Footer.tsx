@@ -51,7 +51,9 @@ const Footer: React.FC<FooterProps> = ({ isFixed = true }) => {
                 activeTab === item.id ? "scale-110" : "scale-100"
               }`}
             />
-            <span className='text-xs font-medium truncate'>{item.label}</span>
+            <span className='text-xs font-medium truncate font-sans'>
+              {item.label}
+            </span>
           </Link>
         ))}
       </div>

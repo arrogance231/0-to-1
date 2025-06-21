@@ -14,14 +14,14 @@ const Hero = () => {
         <div className='w-full mx-auto flex flex-col sm:flex-row items-stretch justify-between h-full min-h-0 box-border'>
           {/* Left half */}
           <div className='flex-1 flex flex-col justify-center h-full gap-2 sm:gap-6 items-start text-left min-w-0 sm:pl-0 pl-0'>
-            <h1 className='text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2 text-black break-words'>
+            <h1 className='text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2 text-black break-words font-bricolage'>
               Hi Matthew, ready to scrub in?
             </h1>
-            <p className='text-xs xs:text-sm sm:text-base md:text-lg text-gray-700 mb-2 sm:mb-4 max-w-md break-words'>
+            <p className='text-xs xs:text-sm sm:text-base md:text-lg text-gray-700 mb-2 sm:mb-4 max-w-md break-words font-sans'>
               Continue your medical training journey with interactive
               simulations and expert mentorship.
             </p>
-            <button className='w-full sm:w-fit px-3 py-2 sm:px-6 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-xs xs:text-sm sm:text-base shadow transition'>
+            <button className='w-full sm:w-fit px-3 py-2 sm:px-6 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-xs xs:text-sm sm:text-base shadow transition font-sans'>
               Start New Simulation
             </button>
           </div>

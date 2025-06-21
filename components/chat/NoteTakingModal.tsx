@@ -36,7 +36,7 @@ const NoteTakingModal: React.FC<NoteTakingModalProps> = ({
             "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), inset 0 2px 4px 0 rgba(0,0,0,0.06)",
         }}
       >
-        <h2 className='text-2xl font-bold text-gray-700 mb-4 border-b-2 border-red-300 pb-2'>
+        <h2 className='text-2xl font-bold text-gray-700 mb-4 border-b-2 border-red-300 pb-2 font-bricolage'>
           My Notes
         </h2>
         <textarea
@@ -50,14 +50,14 @@ const NoteTakingModal: React.FC<NoteTakingModalProps> = ({
           <button
             type='button'
             onClick={onClose}
-            className='px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors'
+            className='px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors font-sans'
           >
             Close
           </button>
           <button
             type='button'
             onClick={handleSave}
-            className='px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition-colors shadow-md'
+            className='px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition-colors shadow-md font-sans'
           >
             Save & Close
           </button>

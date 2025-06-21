@@ -12,7 +12,7 @@ const Loading: React.FC = () => {
         priority
         className='animate-pulse'
       />
-      <span className='mt-6 text-lg text-blue-700 font-semibold animate-pulse'>
+      <span className='mt-6 text-lg text-blue-700 font-semibold animate-pulse font-sans'>
         Loading...
       </span>
     </div>

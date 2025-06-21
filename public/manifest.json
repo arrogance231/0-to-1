@@ -1,0 +1,16 @@
+{
+  "name": "0-to-1-1",
+  "short_name": "0-to-1-1",
+  "description": "A medical training application.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

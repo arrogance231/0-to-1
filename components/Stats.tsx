@@ -8,7 +8,9 @@ const Stats = () => {
 
   return (
     <div className='p-4 rounded-lg'>
-      <h2 className='text-xl font-bold text-gray-800 mb-4'>Your Stats</h2>
+      <h2 className='text-xl font-bold text-gray-800 mb-4 font-bricolage'>
+        Your Stats
+      </h2>
       <div className='flex flex-wrap justify-center gap-3 mb-3'>
         {/* Day Streak */}
         <div className='flex-1 min-w-[100px] max-w-[160px] bg-gradient-to-br from-yellow-400 to-orange-400 rounded-xl p-4 flex flex-col items-center text-white shadow'>

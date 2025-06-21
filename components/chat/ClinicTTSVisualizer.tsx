@@ -238,10 +238,10 @@ const ClinicTTSVisualizer: React.FC<{
         </div>
         {/* Patient Info - directly below circle */}
         <div className='mt-4 text-center'>
-          <div className='text-2xl font-bold text-[#1E4462]'>
+          <div className='text-2xl font-bold text-[#1E4462] font-bricolage'>
             {patient?.patientInfo.name}
           </div>
-          <div className='text-[#1E4462] text-base opacity-80'>
+          <div className='text-[#1E4462] text-base opacity-80 font-sans'>
             {patient?.patientInfo.details}
           </div>
         </div>
