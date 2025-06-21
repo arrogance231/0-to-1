@@ -320,15 +320,11 @@ const ClinicTTSVisualizer: React.FC<{
             aria-label='Back to Chat'
           >
             <Image
-              src='/chat-icon.svgg.svg'
-              alt='Back to Chat'
-              width={36}
-              height={36}
-              style={{
-                filter: closeActive
-                  ? undefined
-                  : "grayscale(1) brightness(0.7)",
-              }}
+              src='/chat-icon.svg'
+              alt='Chat'
+              width={24}
+              height={24}
+              className='text-white'
             />
           </button>
         </div>

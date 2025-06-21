@@ -45,12 +45,11 @@ const ChatInput: React.FC<ChatInputProps> = ({
         className='flex items-center bg-white rounded-full p-1 shadow-md'
       >
         <Image
-          src='/chat-icon.svgg.svg'
-          alt='Chat Icon'
-          width={28}
-          height={28}
-          className='mx-2 cursor-pointer'
-          onClick={onEnterClinicMode}
+          src='/chat-icon.svg'
+          alt='Send'
+          width={20}
+          height={20}
+          className='text-white'
         />
         <input
           type='text'
