@@ -1,5 +1,5 @@
-import Image from "next/image";
 import React from "react";
+import Image from "next/image";
 
 interface ActionButtonsProps {
   onCustomPatientClick: () => void;
@@ -11,7 +11,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   onNoteTakingClick,
 }) => {
   return (
-    <div className='grid grid-cols-3 gap-3 my-4 mx-2'>
+    <div className='grid grid-cols-3 gap-3 my-4 w-full'>
       <button
         onClick={onCustomPatientClick}
         className='bg-[#EC5638] text-white p-3 rounded-xl flex flex-col items-center justify-center gap-2 font-semibold text-sm transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95'

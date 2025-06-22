@@ -2,7 +2,7 @@ import React from "react";
 
 const Analytics: React.FC = () => {
   return (
-    <div className='p-4 rounded-lg bg-white shadow-lg mb-6'>
+    <div className='p-4 rounded-lg bg-white shadow-lg'>
       <h2 className='text-lg font-bold text-gray-800 mb-3 font-bricolage'>
         Your Analytics
       </h2>

@@ -7,11 +7,10 @@ import ChatInput from "@/components/chat/ChatInput";
 import Footer from "@/components/Footer";
 import { getOpenAIResponse } from "@/lib/openai";
 import { useChat } from "@/contexts/ChatContext";
-import CustomPatientModal, {
-  CustomPatientParams,
-} from "@/components/chat/CustomPatientModal";
+import CustomPatientModal from "@/components/chat/CustomPatientModal";
 import NoteTakingModal from "@/components/chat/NoteTakingModal";
 import Loading from "@/components/Loading";
+import { Case } from "@/constants/cases";
 
 interface Message {
   sender: "patient" | "user";
@@ -19,34 +18,22 @@ interface Message {
   time: string;
 }
 
-const getSystemPrompt = (
-  history: string,
-  customParams: CustomPatientParams | null
-) => {
-  let customPromptPart = "";
-  if (customParams) {
-    customPromptPart = `
-The user has customized the patient with the following characteristics. You MUST adhere to them in your responses:
-- Language: ${customParams.language}
-- Age Group: ${customParams.ageGroup}
-- Gender: ${customParams.gender}
-- Main Concern: ${customParams.mainConcern}
-- Mood: ${customParams.mood}
-- Cooperativeness: ${customParams.cooperativeness}
-- Health Level: ${customParams.healthLevel}
-- Talk Style: ${customParams.talkStyle}
-- Support: ${customParams.support}
-`;
-  }
+const getSystemPrompt = (history: string, patient: Case) => {
+  const patientDetails = JSON.stringify(patient.patientInfo);
+  // Include customData if it exists
+  const customData = (patient as any).customData
+    ? JSON.stringify((patient as any).customData)
+    : "No custom data provided.";
 
   return `
 You are a virtual patient simulator for a medical diagnosis training application. The user is a medical student.
 Your primary role is to respond as the patient based on the user's questions.
+The patient you are portraying has the following details: ${patientDetails}.
+The full case details (including vitals and history) are: ${customData}.
 Your secondary role is to evaluate the user's question for its clinical relevance and helpfulness.
-${customPromptPart}
 Based on the user's last question, you MUST return a JSON object with two keys: "answer" and "evaluation".
-1.  "answer": (string) Your response from the patient's perspective. Be realistic.
-2.  "evaluation": (string) Your clinical evaluation of the question. Must be one of three values:
+1. "answer": (string) Your response from the patient's perspective. Be realistic and consistent with all provided data.
+2. "evaluation": (string) Your clinical evaluation of the question. Must be one of three values:
     - "good": The question is relevant, helpful, and moves the diagnosis forward.
     - "neutral": The question is acceptable but not critical.
     - "bad": The question is irrelevant, unprofessional, harmful, or clinically incorrect. This will cause the user to lose a life.
@@ -69,7 +56,6 @@ const ChatPage = () => {
     isLoading,
     setIsLoading,
     isStateLoaded,
-    customPatientParams,
     setCustomPatient,
     notes,
     updateNotes,
@@ -83,7 +69,7 @@ const ChatPage = () => {
   }, [patient, router, isStateLoaded]);
 
   const handleSendMessage = async (text: string) => {
-    if (!text.trim()) return;
+    if (!text.trim() || !patient) return;
 
     const userMessage: Message = {
       sender: "user",
@@ -101,7 +87,7 @@ const ChatPage = () => {
       const history = [...messages, userMessage]
         .map((m) => `${m.sender}: ${m.text}`)
         .join("\n");
-      const systemPrompt = getSystemPrompt(history, customPatientParams);
+      const systemPrompt = getSystemPrompt(history, patient);
       const rawResponse = await getOpenAIResponse(text, systemPrompt);
 
       let answer = "I'm not sure how to respond to that.";
@@ -157,12 +143,17 @@ const ChatPage = () => {
     );
   }
 
+  const handleApplyCustomPatient = (newPatient: Case) => {
+    setCustomPatient(newPatient);
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <CustomPatientModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onApply={setCustomPatient}
+        onApply={handleApplyCustomPatient}
       />
       <NoteTakingModal
         isOpen={isNoteModalOpen}
@@ -190,13 +181,11 @@ const ChatPage = () => {
               </div>
             </div>
           </div>
-          <div className='flex justify-center items-center w-full z-10 flex-shrink-0'>
-            <div className='flex gap-4'>
-              <ActionButtons
-                onCustomPatientClick={() => setIsModalOpen(true)}
-                onNoteTakingClick={() => setIsNoteModalOpen(true)}
-              />
-            </div>
+          <div className='flex justify-center items-center w-full px-4 z-10 flex-shrink-0'>
+            <ActionButtons
+              onCustomPatientClick={() => setIsModalOpen(true)}
+              onNoteTakingClick={() => setIsNoteModalOpen(true)}
+            />
           </div>
           <ChatMessages messages={messages} isLoading={isLoading} />
           <div

@@ -39,24 +39,24 @@ const ChatInput: React.FC<ChatInputProps> = ({
   };
 
   return (
-    <div className='bg-transparent p-2'>
+    <div className='bg-transparent p-4'>
       <form
         onSubmit={handleSubmit}
-        className='flex items-center bg-white rounded-full p-1 shadow-md'
+        className='flex items-center bg-white rounded-full px-4 py-2 shadow-md'
       >
-        <Image
-          src='/chat-icon.svg'
-          alt='Send'
-          width={20}
-          height={20}
-          className='text-white'
-        />
+        <button
+          type='button'
+          onClick={onEnterClinicMode}
+          className='p-2 transition-all duration-300 ease-in-out transform hover:scale-110 active:scale-95'
+        >
+          <Image src='/clinic.svg' alt='Clinic' width={24} height={24} />
+        </button>
         <input
           type='text'
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder={disabled ? "AI is thinking..." : "Type your question..."}
-          className='flex-1 bg-transparent border-none focus:ring-0 text-sm text-gray-800'
+          className='flex-1 bg-transparent border-none focus:ring-0 text-sm text-gray-800 px-2'
           disabled={disabled}
         />
         <button

@@ -5,7 +5,7 @@ import Link from "next/link";
 const CallToAction = () => {
   return (
     <div
-      className='relative rounded-lg p-6 mb-6 flex justify-between items-start'
+      className='relative rounded-lg p-6 flex justify-between items-start'
       style={{
         height: "180px",
         width: "100%",

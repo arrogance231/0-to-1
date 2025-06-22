@@ -42,15 +42,17 @@ const Footer: React.FC<FooterProps> = ({ isFixed = true }) => {
                 : "text-gray-500"
             }`}
           >
-            <Image
-              src={item.icon}
-              alt={item.label}
-              width={24}
-              height={24}
-              className={`mb-1 transition-all duration-200 ${
-                activeTab === item.id ? "scale-110" : "scale-100"
-              }`}
-            />
+            <div className='w-8 h-8 flex items-center justify-center mb-1'>
+              <Image
+                src={item.icon}
+                alt={item.label}
+                width={24}
+                height={24}
+                className={`transition-all duration-200 ${
+                  activeTab === item.id ? "scale-110" : "scale-100"
+                }`}
+              />
+            </div>
             <span className='text-xs font-medium truncate font-sans'>
               {item.label}
             </span>

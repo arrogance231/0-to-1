@@ -8,18 +8,6 @@ import React, {
 } from "react";
 import { Case } from "@/constants/cases";
 
-export interface CustomPatientParams {
-  language: string;
-  ageGroup: string;
-  gender: string;
-  mainConcern: string;
-  mood: string;
-  cooperativeness: string;
-  healthLevel: string;
-  talkStyle: string;
-  support: string;
-}
-
 interface Message {
   sender: "patient" | "user";
   text: string;
@@ -38,13 +26,12 @@ interface ChatContextType {
   patient: Case | null;
   isLoading: boolean;
   isStateLoaded: boolean;
-  customPatientParams: CustomPatientParams | null;
   notes: string;
   selectCase: (caseData: Case) => void;
   addMessage: (message: Message) => void;
   updateStats: (evaluation: "good" | "bad" | "neutral") => void;
   setIsLoading: (isLoading: boolean) => void;
-  setCustomPatient: (params: CustomPatientParams | null) => void;
+  setCustomPatient: (patient: Case) => void;
   updateNotes: (notes: string) => void;
   clearChat: () => void;
 }
@@ -69,20 +56,16 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
   const [patient, setPatient] = useState<Case | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isStateLoaded, setIsStateLoaded] = useState(false);
-  const [customPatientParams, setCustomPatientParams] =
-    useState<CustomPatientParams | null>(null);
   const [notes, setNotes] = useState("");
 
   useEffect(() => {
     try {
       const savedState = sessionStorage.getItem("chatState");
       if (savedState) {
-        const { stats, messages, patient, customPatientParams, notes } =
-          JSON.parse(savedState);
+        const { stats, messages, patient, notes } = JSON.parse(savedState);
         if (stats) setStats(stats);
         if (messages) setMessages(messages);
         if (patient) setPatient(patient);
-        if (customPatientParams) setCustomPatientParams(customPatientParams);
         if (notes) setNotes(notes);
       }
     } catch (error) {
@@ -98,14 +81,13 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         stats,
         messages,
         patient,
-        customPatientParams,
         notes,
       };
       sessionStorage.setItem("chatState", JSON.stringify(chatState));
     } catch (error) {
       console.error("Failed to save chat state to sessionStorage:", error);
     }
-  }, [stats, messages, patient, customPatientParams, notes]);
+  }, [stats, messages, patient, notes]);
 
   const selectCase = (caseData: Case) => {
     setPatient(caseData);
@@ -119,7 +101,6 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         }),
       },
     ]);
-    setCustomPatientParams(null);
   };
 
   const addMessage = (message: Message) => {
@@ -138,8 +119,18 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const setCustomPatient = (params: CustomPatientParams | null) => {
-    setCustomPatientParams(params);
+  const setCustomPatient = (patient: Case) => {
+    setPatient(patient);
+    setMessages([
+      {
+        sender: "patient",
+        text: patient.initialPrompt,
+        time: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      },
+    ]);
   };
 
   const updateNotes = (notes: string) => {
@@ -149,7 +140,6 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
   const clearChat = () => {
     setMessages([]);
     setPatient(null);
-    setCustomPatientParams(null);
     setNotes("");
     sessionStorage.removeItem("chatState");
   };
@@ -162,7 +152,6 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         patient,
         isLoading,
         isStateLoaded,
-        customPatientParams,
         notes,
         selectCase,
         addMessage,
@@ -177,4 +166,3 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     </ChatContext.Provider>
   );
 };
- 

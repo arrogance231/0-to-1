@@ -61,7 +61,7 @@ const activityColors = [
 
 const ActivityHistory: React.FC = () => {
   return (
-    <div className='p-4 rounded-lg bg-white shadow-lg mt-8'>
+    <div className='p-4 rounded-lg bg-white shadow-lg'>
       <h2 className='text-lg font-bold text-gray-800 mb-2 font-bricolage'>
         Activity History
       </h2>

@@ -1,22 +1,21 @@
 "use client";
+import { useChat } from "@/contexts/ChatContext";
 import Image from "next/image";
-import React from "react";
-import { useChat } from "../../contexts/ChatContext"; // We will create this context next
 
-const StatItem = ({
-  icon,
-  value,
-  color,
-}: {
+interface StatItemProps {
   icon: string;
   value: number;
   color: string;
-}) => (
-  <div className='flex items-center gap-1'>
-    <Image src={icon} alt='' width={18} height={18} />
-    <span className={`font-bold text-sm ${color}`}>{value}</span>
-  </div>
-);
+}
+
+const StatItem: React.FC<StatItemProps> = ({ icon, value, color }) => {
+  return (
+    <div className='flex items-center gap-1'>
+      <Image src={icon} alt='' width={16} height={16} />
+      <span className={`font-bold text-sm ${color}`}>{value}</span>
+    </div>
+  );
+};
 
 const ChatNavBar = () => {
   const { stats } = useChat();

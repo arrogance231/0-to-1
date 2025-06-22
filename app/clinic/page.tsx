@@ -9,6 +9,7 @@ import ChatNavBar from "@/components/chat/ChatNavBar";
 import CustomPatientModal from "@/components/chat/CustomPatientModal";
 import NoteTakingModal from "@/components/chat/NoteTakingModal";
 import Loading from "@/components/Loading";
+import { Case } from "@/constants/cases";
 
 const ClinicPage = () => {
   const router = useRouter();
@@ -31,12 +32,17 @@ const ClinicPage = () => {
     );
   }
 
+  const handleApplyCustomPatient = (patient: Case) => {
+    setCustomPatient(patient);
+    setIsModalOpen(false);
+  };
+
   return (
     <div className='flex flex-col h-screen max-h-screen min-h-0 bg-transparent relative'>
       <CustomPatientModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onApply={setCustomPatient}
+        onApply={handleApplyCustomPatient}
       />
       <NoteTakingModal
         isOpen={isNoteModalOpen}
@@ -46,13 +52,11 @@ const ClinicPage = () => {
       />
       <ChatNavBar />
       {/* Action Buttons at the top */}
-      <div className='flex justify-center items-center w-full z-10 flex-shrink-0 mt-2'>
-        <div className='flex gap-4'>
-          <ActionButtons
-            onCustomPatientClick={() => setIsModalOpen(true)}
-            onNoteTakingClick={() => setIsNoteModalOpen(true)}
-          />
-        </div>
+      <div className='flex justify-center items-center w-full px-4 z-10 flex-shrink-0 mt-2'>
+        <ActionButtons
+          onCustomPatientClick={() => setIsModalOpen(true)}
+          onNoteTakingClick={() => setIsNoteModalOpen(true)}
+        />
       </div>
       {/* ClinicTTSVisualizer centered, squashed */}
       <div className='flex-1 min-h-0 flex flex-col items-center justify-center w-full pb-20'>
