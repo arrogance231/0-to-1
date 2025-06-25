@@ -161,7 +161,7 @@ const ChatPage = () => {
         onSave={updateNotes}
         initialNotes={notes}
       />
-      <div className='flex flex-col h-screen max-h-screen min-h-0 bg-transparent relative pt-16 pb-20 overflow-hidden'>
+      <div className='flex flex-col h-screen max-h-screen min-h-0 bg-transparent relative pt-16 pb-36 overflow-hidden'>
         <div className='flex-1 min-h-0 flex flex-col items-center justify-center w-full'>
           {/* Profile bar and action buttons */}
           <div className='flex flex-col items-center w-full px-4 flex-shrink-0'>

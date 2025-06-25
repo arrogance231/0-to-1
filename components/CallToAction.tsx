@@ -1,8 +1,33 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
 const CallToAction = () => {
+  const [hasHistory, setHasHistory] = useState(false);
+  const [lastPatient, setLastPatient] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const chatState = sessionStorage.getItem("chatState");
+        if (chatState) {
+          const { messages, patient } = JSON.parse(chatState);
+          if (
+            messages &&
+            messages.length > 1 &&
+            patient &&
+            patient.patientInfo?.name
+          ) {
+            setHasHistory(true);
+            setLastPatient(patient.patientInfo.name);
+          }
+        }
+      } catch {}
+    }
+  }, []);
+
   return (
     <div
       className='relative rounded-lg p-6 flex justify-between items-start'
@@ -15,14 +40,26 @@ const CallToAction = () => {
       {/* Left Text Content */}
       <div className='flex flex-col justify-center'>
         <h1 className='text-white font-bold text-xl mb-2 font-bricolage'>
-          Ready to Practice?
+          {hasHistory ? "Continue Where You Left Off" : "Ready to Practice?"}
         </h1>
         <p className='text-white text-sm mb-4 opacity-90 font-sans'>
-          Sharpen your diagnostic skills with AI patients.
+          {hasHistory
+            ? `Resume your last session with ${
+                lastPatient ? lastPatient : "your patient"
+              }.`
+            : "Sharpen your diagnostic skills with AI patients."}
         </p>
-        <Link href='/cases'>
-          <button className='bg-white text-[#279FD5] font-semibold px-6 py-2 my-4 rounded-lg hover:bg-gray-100 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-sans'>
-            New Patient Practice
+        <Link href={hasHistory ? "/chat" : "/cases"}>
+          <button
+            className={`bg-white text-[#279FD5] font-semibold px-6 py-2 my-4 rounded-lg hover:bg-gray-100 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-sans flex items-center gap-2`}
+          >
+            {hasHistory && (
+              <span
+                className='inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse'
+                title='Session in progress'
+              ></span>
+            )}
+            {hasHistory ? "Continue Session" : "New Patient Practice"}
           </button>
         </Link>
       </div>

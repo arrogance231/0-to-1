@@ -11,7 +11,7 @@ import Analytics from "@/components/Analytics";
 const Home = () => {
   return (
     <Suspense fallback={<Loading />}>
-      <div className='w-full max-w-md mx-auto px-4 pt-6 pb-32 space-y-6 rounded-3xl bg-[#f3fafb] min-h-screen'>
+      <div className='w-full max-w-md mx-auto px-4 pt-6 pb-32 space-y-6 rounded-3xl min-h-screen'>
         <CallToAction />
         <Stats />
         <ClinicalTopics />

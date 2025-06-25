@@ -66,7 +66,12 @@ export default function OnboardingPage() {
   useEffect(() => {
     if (step === 3) {
       // Redirect to /cases after onboarding
-      setTimeout(() => router.replace("/cases"), 1200);
+      setTimeout(() => {
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("showOnboardingMessage", "true");
+        }
+        router.replace("/cases");
+      }, 1200);
     }
   }, [step, router]);
 
@@ -94,10 +99,10 @@ export default function OnboardingPage() {
           <circle cx='80%' cy='80%' r='100' fill='#FACC15' />
         </svg>
       </div>
-      <div className='w-full max-w-xs bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center z-10 relative animate-fade-in'>
+      <div className='w-full max-w-xs bg-white rounded-3xl shadow-2xl p-8 flex flex-col items-center z-10 relative animate-fade-in border border-blue-100'>
         {/* Mascot with bounce-in animation */}
         <div
-          className={`mb-4 transition-all duration-500 ${
+          className={`mb-6 transition-all duration-500 ${
             mascotVisible
               ? "scale-100 opacity-100 animate-bounce-in"
               : "scale-75 opacity-0"
@@ -106,9 +111,9 @@ export default function OnboardingPage() {
           <Image
             src='/icon.svg'
             alt='PockyP Mascot'
-            width={100}
-            height={100}
-            className='drop-shadow-xl'
+            width={110}
+            height={110}
+            className='drop-shadow-2xl'
             priority
           />
         </div>
@@ -116,23 +121,23 @@ export default function OnboardingPage() {
         <div className={`w-full transition-all duration-300 ${stepAnim}`}>
           {step === 1 && (
             <>
-              <h2 className='text-center text-lg font-semibold text-[#279FD5] mb-2 animate-slide-in'>
+              <h2 className='text-center text-2xl font-bold font-display text-[#279FD5] mb-2 animate-slide-in tracking-tight'>
                 Greetings!
               </h2>
-              <p className='text-center text-[#279FD5] mb-6 animate-fade-in'>
+              <p className='text-center text-[#279FD5] mb-6 animate-fade-in font-handwriting text-lg'>
                 My name is <span className='font-bold'>PockyP</span>.<br />
                 What is your name?
               </p>
               <input
                 type='text'
-                className='w-full rounded-lg border border-gray-200 px-3 py-2 mb-4 text-center focus:outline-none focus:ring-2 focus:ring-blue-200 animate-fade-in'
+                className='w-full rounded-xl border border-gray-200 px-4 py-3 mb-4 text-center focus:outline-none focus:ring-2 focus:ring-blue-200 animate-fade-in font-sans text-base shadow-sm'
                 placeholder='Enter your name'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 autoFocus
               />
               <button
-                className='w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold rounded-lg py-2 shadow transition transform hover:scale-105 active:scale-95 animate-pop-in disabled:opacity-50'
+                className='w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold rounded-xl py-3 shadow-lg transition transform hover:scale-105 active:scale-95 animate-pop-in disabled:opacity-50 font-display text-base tracking-wide'
                 onClick={handleProceed}
                 disabled={!name.trim()}
               >
@@ -142,15 +147,15 @@ export default function OnboardingPage() {
           )}
           {step === 2 && (
             <>
-              <h2 className='text-center text-lg font-semibold text-[#279FD5] mb-2 animate-slide-in'>
+              <h2 className='text-center text-2xl font-bold font-display text-[#279FD5] mb-2 animate-slide-in tracking-tight'>
                 Hi {name.trim()}!
               </h2>
-              <p className='text-center text-[#279FD5] mb-4 animate-fade-in'>
+              <p className='text-center text-[#279FD5] mb-4 animate-fade-in font-handwriting text-lg'>
                 Which disease or specialty do you want to practice conquering?
               </p>
               <div className='w-full mb-4 animate-fade-in'>
                 <select
-                  className='w-full rounded-lg border border-gray-200 px-3 py-2 text-center focus:outline-none focus:ring-2 focus:ring-blue-200 animate-pop-in'
+                  className='w-full rounded-xl border border-gray-200 px-4 py-3 text-center focus:outline-none focus:ring-2 focus:ring-blue-200 animate-pop-in font-sans text-base shadow-sm'
                   value={disease}
                   onChange={(e) => setDisease(e.target.value)}
                 >
@@ -163,7 +168,7 @@ export default function OnboardingPage() {
                 </select>
               </div>
               <button
-                className='w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold rounded-lg py-2 shadow transition transform hover:scale-105 active:scale-95 animate-pop-in disabled:opacity-50'
+                className='w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold rounded-xl py-3 shadow-lg transition transform hover:scale-105 active:scale-95 animate-pop-in disabled:opacity-50 font-display text-base tracking-wide'
                 onClick={handleProceed}
                 disabled={!disease}
               >
@@ -173,15 +178,15 @@ export default function OnboardingPage() {
           )}
           {step === 3 && (
             <>
-              <h2 className='text-center text-lg font-semibold text-[#279FD5] mb-2 animate-slide-in'>
+              <h2 className='text-center text-2xl font-bold font-display text-[#279FD5] mb-2 animate-slide-in tracking-tight'>
                 Welcome, {name.trim()}!
               </h2>
-              <p className='text-center text-[#279FD5] mb-6 animate-fade-in'>
+              <p className='text-center text-[#279FD5] mb-6 animate-fade-in font-handwriting text-lg'>
                 You&rsquo;re all set to start practicing {disease}!<br />
                 You can always change your focus later in settings.
               </p>
               <div className='w-full flex justify-center animate-pop-in'>
-                <span className='text-blue-500 font-semibold text-sm bg-blue-50 rounded-full px-4 py-2 shadow'>
+                <span className='text-blue-500 font-semibold text-base bg-blue-50 rounded-full px-4 py-2 shadow font-display'>
                   Redirecting to your recommended cases...
                 </span>
               </div>

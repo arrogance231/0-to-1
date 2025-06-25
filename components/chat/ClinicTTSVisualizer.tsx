@@ -185,18 +185,10 @@ const ClinicTTSVisualizer: React.FC<{
       style={
         squashContent
           ? {
-              backgroundImage: 'url("/bg.svg")',
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
               height: "100%",
               overflow: "hidden",
             }
           : {
-              backgroundImage: 'url("/bg.svg")',
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
               minHeight: "100vh",
               maxHeight: "100vh",
               overflow: "hidden",
@@ -260,7 +252,11 @@ const ClinicTTSVisualizer: React.FC<{
                   ? "bg-white/90 text-gray-800 border-gray-200"
                   : "bg-blue-50 text-blue-900 border-blue-200"
               }`}
-              style={{ wordBreak: "break-word" }}
+              style={{
+                backgroundColor: "#fff",
+                color: msg.from === "user" ? "#000" : "#1E4462",
+                border: "1px solid #EC563866",
+              }}
             >
               <span className='font-semibold'>
                 {msg.from === "user" ? "You" : "Patient"}:

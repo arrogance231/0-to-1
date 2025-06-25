@@ -3,14 +3,13 @@ import ChatNavBar from "@/components/chat/ChatNavBar";
 
 export default function ChatLayout({ children }: { children: ReactNode }) {
   return (
-    <div
-      className='flex flex-col h-screen w-full'
-      style={{ overflow: "visible" }}
-    >
-      <ChatNavBar />
-      <main className='flex-1 flex flex-col' style={{ overflow: "visible" }}>
-        {children}
-      </main>
+    <div className='min-h-screen flex flex-col'>
+      <div className='mobile-container flex-1 flex flex-col'>
+        <ChatNavBar />
+        <main className='flex-1 flex flex-col pb-36 safe-area-bottom'>
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

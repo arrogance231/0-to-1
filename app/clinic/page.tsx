@@ -59,7 +59,7 @@ const ClinicPage = () => {
         />
       </div>
       {/* ClinicTTSVisualizer centered, squashed */}
-      <div className='flex-1 min-h-0 flex flex-col items-center justify-center w-full pb-20'>
+      <div className='flex-1 min-h-0 flex flex-col items-center justify-center w-full pb-36'>
         <ClinicTTSVisualizer squashContent={true} />
       </div>
       <Footer isFixed={true} />

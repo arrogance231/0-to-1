@@ -1,12 +1,338 @@
 @import "tailwindcss";
 
+/* Mobile-first design system */
+:root {
+  --mobile-primary: #007aff;
+  --mobile-secondary: #5856d6;
+  --mobile-success: #34c759;
+  --mobile-warning: #ff9500;
+  --mobile-danger: #ff3b30;
+  --mobile-background: #f2f2f7;
+  --mobile-surface: #ffffff;
+  --mobile-text-primary: #000000;
+  --mobile-text-secondary: #8e8e93;
+  --mobile-border: #c6c6c8;
+  --mobile-shadow: rgba(0, 0, 0, 0.1);
+}
+
+.dark {
+  --mobile-primary: #a259ff; /* Neon violet */
+  --mobile-secondary: #5e5ce6;
+  --mobile-success: #a259ff;
+  --mobile-warning: #ffd60a;
+  --mobile-danger: #ff453a;
+  --mobile-background: #2d006b; /* Neon violet bg */
+  --mobile-surface: #3d008f; /* Neon violet surface */
+  --mobile-text-primary: #f7f7fa;
+  --mobile-text-secondary: #d1b3ff;
+  --mobile-border: rgba(255, 255, 255, 0.12);
+  --mobile-shadow: rgba(162, 89, 255, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
-  background-image: url("/bg.svg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  background-color: var(--mobile-background);
+  color: var(--mobile-text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+  overflow-x: hidden;
+}
+
+/* Safe area support for mobile devices */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-right {
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Mobile-specific animations */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Mobile app specific classes */
+.mobile-card {
+  background: var(--mobile-surface);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px var(--mobile-shadow);
+  border: 1px solid var(--mobile-border);
+  transition: background 0.2s, color 0.2s;
+}
+
+.mobile-button {
+  background: var(--mobile-primary);
+  color: #fff;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-shadow: 0 0 6px var(--mobile-primary, #a259ff);
+}
+
+.mobile-button:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.mobile-button-secondary {
+  background: transparent;
+  color: var(--mobile-primary);
+  border: 1.5px solid var(--mobile-primary);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-shadow: 0 0 4px var(--mobile-primary, #a259ff);
+}
+
+.dark .mobile-button-secondary {
+  background: var(--mobile-surface);
+  color: var(--mobile-primary);
+  border: 1.5px solid var(--mobile-primary);
+}
+
+.mobile-input {
+  background: var(--mobile-surface);
+  border: 1.5px solid var(--mobile-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 16px;
+  color: var(--mobile-text-primary);
+  transition: border-color 0.2s;
+}
+
+.mobile-input:focus {
+  outline: none;
+  border-color: var(--mobile-primary);
+  box-shadow: 0 0 0 2px var(--mobile-primary) 44;
+}
+
+/* Mobile navigation styles */
+.mobile-nav {
+  background: var(--mobile-surface);
+  border-bottom: 1px solid var(--mobile-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.mobile-tab-bar {
+  background: var(--mobile-surface);
+  border-top: 1px solid var(--mobile-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Mobile list styles */
+.mobile-list {
+  background: var(--mobile-surface);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.mobile-list-item {
+  padding: 16px;
+  border-bottom: 1px solid var(--mobile-border);
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.mobile-list-item:last-child {
+  border-bottom: none;
+}
+
+.mobile-list-item:active {
+  background-color: rgba(162, 89, 255, 0.08);
+}
+
+/* Mobile modal styles */
+.mobile-modal {
+  background: var(--mobile-surface);
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 -4px 20px var(--mobile-shadow);
+}
+
+.mobile-modal-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Mobile status bar */
+.mobile-status-bar {
+  height: 44px;
+  background: var(--mobile-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.dark .mobile-status-bar {
+  background: #232426;
+  color: #f7f7fa;
+}
+
+/* Mobile haptic feedback simulation */
+.haptic-feedback {
+  transition: transform 0.1s ease;
+}
+
+.haptic-feedback:active {
+  transform: scale(0.95);
+}
+
+/* Mobile scrollbar */
+::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+/* Mobile selection */
+::selection {
+  background: var(--mobile-primary);
+  color: white;
+}
+
+/* Mobile focus styles */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--mobile-primary);
+  outline-offset: 2px;
+}
+
+/* Mobile typography */
+.mobile-title {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--mobile-text-primary);
+}
+
+.mobile-headline {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--mobile-text-primary);
+}
+
+.mobile-body {
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--mobile-text-primary);
+}
+
+.mobile-caption {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--mobile-text-secondary);
+}
+
+/* Mobile spacing system */
+.mobile-spacing-xs {
+  gap: 4px;
+}
+.mobile-spacing-sm {
+  gap: 8px;
+}
+.mobile-spacing-md {
+  gap: 16px;
+}
+.mobile-spacing-lg {
+  gap: 24px;
+}
+.mobile-spacing-xl {
+  gap: 32px;
+}
+
+/* Mobile responsive utilities */
+@media (max-width: 480px) {
+  .mobile-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media (min-width: 481px) {
+  .mobile-container {
+    max-width: 414px;
+    margin: 0 auto;
+  }
 }
 
 @theme {
@@ -20,4 +346,60 @@ body {
       transform: scale(1);
     }
   }
+}
+
+/* Footer icons and text in dark mode */
+.dark .mobile-tab-bar {
+  background: var(--mobile-surface);
+  border-top: 1px solid var(--mobile-border);
+}
+
+.dark .mobile-tab-bar a,
+.dark .mobile-tab-bar span {
+  color: #f7f7fa;
+}
+
+.dark .mobile-tab-bar a.active,
+.dark .mobile-tab-bar a[aria-current="page"] {
+  color: #a259ff !important;
+  text-shadow: 0 0 6px #a259ff;
+}
+
+/* Inputs and selects in dark mode */
+.dark .mobile-input {
+  background: #3d008f;
+  color: #f7f7fa;
+  border: 1.5px solid #5e5ce6;
+}
+
+.dark .mobile-input:focus {
+  border-color: #a259ff;
+  box-shadow: 0 0 0 2px #a259ff44;
+}
+
+/* Button hover/focus for dark */
+.dark .mobile-button:hover,
+.dark .mobile-button:focus {
+  background: #a259ff;
+  color: #2d006b;
+  text-shadow: 0 0 8px #a259ff;
+}
+
+.dark .mobile-button-secondary:hover,
+.dark .mobile-button-secondary:focus {
+  background: #3d008f;
+  color: #a259ff;
+  border-color: #a259ff;
+  text-shadow: 0 0 8px #a259ff;
+}
+
+/* Card shadow in dark mode */
+.dark .mobile-card {
+  box-shadow: 0 2px 8px rgba(162, 89, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* List item hover in dark */
+.dark .mobile-list-item:active {
+  background-color: rgba(162, 89, 255, 0.1);
 }

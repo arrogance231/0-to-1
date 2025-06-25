@@ -221,11 +221,24 @@ const CasesPage = () => {
   // Message above mascot icon (footer)
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const msg = tempSpecialty
-        ? `Showing cases for ${tempSpecialty}`
-        : userSpecialty
-        ? `Recommended cases for your specialty: ${userSpecialty}`
-        : "";
+      // Check if we should show the onboarding message just once
+      const showOnboardingMessage = sessionStorage.getItem(
+        "showOnboardingMessage"
+      );
+      let msg = "";
+      if (showOnboardingMessage) {
+        msg = userSpecialty
+          ? `Recommended cases for your specialty: ${userSpecialty}`
+          : "";
+        // Remove the flag so it only shows once
+        sessionStorage.removeItem("showOnboardingMessage");
+      } else {
+        msg = tempSpecialty
+          ? `Showing cases for ${tempSpecialty}`
+          : userSpecialty
+          ? ""
+          : "";
+      }
       // Set a custom attribute on the body for the footer to read
       document.body.setAttribute("data-cases-message", msg);
     }

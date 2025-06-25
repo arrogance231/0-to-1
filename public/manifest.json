@@ -1,16 +1,21 @@
 {
-  "name": "0-to-1-1",
-  "short_name": "0-to-1-1",
-  "description": "A medical training application.",
+  "name": "PocketPatient",
+  "short_name": "PocketPatient",
+  "description": "AI-powered medical training platform for healthcare professionals",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "orientation": "portrait",
+  "background_color": "#F2F2F7",
+  "theme_color": "#007AFF",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["medical", "education", "health"],
   "icons": [
     {
       "src": "/icon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }

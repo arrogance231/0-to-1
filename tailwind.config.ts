@@ -24,8 +24,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-inter)"],
-        bricolage: ["var(--font-bricolage)"],
+        display: ["Poppins", "Bricolage Grotesque", "sans-serif"],
+        sans: ["Inter", "Nunito", "Roboto", "sans-serif"],
+        handwriting: ["Kalam", "Caveat", "cursive"],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

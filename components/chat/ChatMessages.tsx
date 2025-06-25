@@ -24,20 +24,17 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, isLoading }) => {
       {messages.map((msg, index) => (
         <div
           key={index}
-          className={`flex flex-col ${
-            msg.sender === "user" ? "items-end" : "items-start"
-          }`}
+          className={
+            `rounded-lg px-3 py-2 text-base shadow border w-full text-left` +
+            (msg.sender === "user" ? "" : "")
+          }
+          style={{
+            backgroundColor: "#fff",
+            color: msg.sender === "user" ? "#000" : "#1E4462",
+            border: "1px solid #EC563866",
+          }}
         >
-          <div
-            className={`max-w-xs md:max-w-md p-3 rounded-xl shadow-sm animate-pop-in ${
-              msg.sender === "user"
-                ? "bg-[#279FD5] text-white rounded-br-none"
-                : "bg-white text-gray-800 border border-[#EC5638]/50 rounded-bl-none"
-            }`}
-          >
-            <p className='text-sm'>{msg.text}</p>
-          </div>
-          <span className='text-xs text-gray-500 mt-1 px-1'>{msg.time}</span>
+          <p className='text-sm'>{msg.text}</p>
         </div>
       ))}
       {isLoading && (
@@ -57,4 +54,3 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, isLoading }) => {
 };
 
 export default ChatMessages;
- 
