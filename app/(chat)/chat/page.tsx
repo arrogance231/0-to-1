@@ -21,8 +21,8 @@ interface Message {
 const getSystemPrompt = (history: string, patient: Case) => {
   const patientDetails = JSON.stringify(patient.patientInfo);
   // Include customData if it exists
-  const customData = (patient as any).customData
-    ? JSON.stringify((patient as any).customData)
+  const customData = (patient as { customData?: Partial<Case> }).customData
+    ? JSON.stringify((patient as { customData?: Partial<Case> }).customData)
     : "No custom data provided.";
 
   return `

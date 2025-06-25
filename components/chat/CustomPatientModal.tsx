@@ -71,6 +71,7 @@ const CustomPatientModal: React.FC<CustomPatientModalProps> = ({
           formData.age || "Unknown"
         } year old ${formData.gender.toLowerCase()}`,
       },
+      specialty: "Custom",
     };
     onApply(customPatient);
   };

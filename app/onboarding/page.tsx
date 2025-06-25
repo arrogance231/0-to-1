@@ -177,7 +177,7 @@ export default function OnboardingPage() {
                 Welcome, {name.trim()}!
               </h2>
               <p className='text-center text-[#279FD5] mb-6 animate-fade-in'>
-                You're all set to start practicing {disease}!<br />
+                You&rsquo;re all set to start practicing {disease}!<br />
                 You can always change your focus later in settings.
               </p>
               <div className='w-full flex justify-center animate-pop-in'>
