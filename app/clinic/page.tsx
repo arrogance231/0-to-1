@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 import React from "react";
 import { useRouter } from "next/navigation";
 import ClinicTTSVisualizer from "@/components/chat/ClinicTTSVisualizer";
@@ -21,7 +22,15 @@ const ClinicPage = () => {
 
   // If no patient, redirect to /chat (only after state is loaded)
   React.useEffect(() => {
-    if (isStateLoaded && !patient) router.push("/chat");
+    if (isStateLoaded && !patient) {
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("routeChangeStart"));
+      }
+      router.push("/chat");
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("routeChangeComplete"));
+      }
+    }
   }, [isStateLoaded, patient, router]);
 
   if (!isStateLoaded || !patient) {

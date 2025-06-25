@@ -9,7 +9,7 @@ const CallToAction = () => {
   const [lastPatient, setLastPatient] = useState<string | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && typeof document !== "undefined") {
       try {
         const chatState = sessionStorage.getItem("chatState");
         if (chatState) {

@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ActionButtons from "@/components/chat/ActionButtons";
@@ -64,7 +65,13 @@ const ChatPage = () => {
 
   useEffect(() => {
     if (isStateLoaded && !patient) {
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("routeChangeStart"));
+      }
       router.push("/cases");
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("routeChangeComplete"));
+      }
     }
   }, [patient, router, isStateLoaded]);
 
@@ -196,7 +203,15 @@ const ChatPage = () => {
               <ChatInput
                 onSendMessage={handleSendMessage}
                 disabled={isLoading}
-                onEnterClinicMode={() => router.push("/clinic")}
+                onEnterClinicMode={() => {
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new Event("routeChangeStart"));
+                  }
+                  router.push("/clinic");
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new Event("routeChangeComplete"));
+                  }
+                }}
               />
             </div>
           </div>

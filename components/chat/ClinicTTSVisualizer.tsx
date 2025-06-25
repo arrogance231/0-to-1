@@ -55,6 +55,8 @@ const ClinicTTSVisualizer: React.FC<{
 
   // Helper to play audio and connect to analyser
   async function playAudioWithVisualizer(audioUrl: string, answer: string) {
+    if (typeof window === "undefined" || typeof document === "undefined")
+      return;
     if (!audioRef.current) return;
     audioRef.current.src = audioUrl;
     audioRef.current.crossOrigin = "anonymous";
@@ -62,6 +64,7 @@ const ClinicTTSVisualizer: React.FC<{
 
     // Setup Web Audio API for visualization
     if (!audioCtxRef.current) {
+      if (typeof window === "undefined") return;
       audioCtxRef.current = new (window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext })
           .webkitAudioContext)();
@@ -310,7 +313,9 @@ const ClinicTTSVisualizer: React.FC<{
               setCloseActive(true);
               setTimeout(() => {
                 setCloseActive(false);
-                window.location.href = "/chat";
+                if (typeof window !== "undefined") {
+                  window.location.href = "/chat";
+                }
               }, 300);
             }}
             aria-label='Back to Chat'

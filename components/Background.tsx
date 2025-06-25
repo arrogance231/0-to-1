@@ -24,11 +24,6 @@ interface Circle {
   opacity: number;
 }
 
-function isDesktop() {
-  if (typeof window === "undefined") return false;
-  return window.innerWidth >= 768;
-}
-
 function generateCircles(desktop: boolean) {
   const num = desktop ? DESKTOP_CIRCLES : MOBILE_CIRCLES;
   const sizes = desktop ? CIRCLE_SIZE_DESKTOP : CIRCLE_SIZE_MOBILE;
@@ -50,12 +45,19 @@ function generateCircles(desktop: boolean) {
 const Background: React.FC = () => {
   const [circles, setCircles] = useState<Circle[]>([]);
   useEffect(() => {
+    const isDesktop = () => {
+      if (typeof window === "undefined") return false;
+      return window.innerWidth >= 768;
+    };
     const updateCircles = () => {
       setCircles(generateCircles(isDesktop()));
     };
     updateCircles();
-    window.addEventListener("resize", updateCircles);
-    return () => window.removeEventListener("resize", updateCircles);
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", updateCircles);
+      return () => window.removeEventListener("resize", updateCircles);
+    }
+    return () => {};
   }, []);
 
   return (

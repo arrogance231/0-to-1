@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 import React, { Suspense, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { clinicalCases, Case } from "@/constants/cases";
@@ -34,7 +35,13 @@ const CaseCard = ({ caseData }: { caseData: Case }) => {
 
   const handleStartCase = () => {
     selectCase(caseData);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("routeChangeStart"));
+    }
     router.push("/chat");
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("routeChangeComplete"));
+    }
   };
 
   return (
@@ -200,9 +207,11 @@ const CasesPage = () => {
   }, [specialty, tempSpecialty]);
 
   const handleResetOnboarding = () => {
-    localStorage.removeItem("onboardingInfo");
-    localStorage.removeItem("onboardingComplete");
-    router.replace("/onboarding");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("onboardingInfo");
+      localStorage.removeItem("onboardingComplete");
+      router.replace("/onboarding");
+    }
   };
 
   const handleBrowseSpecialty = (spec: string) => {
@@ -220,7 +229,7 @@ const CasesPage = () => {
 
   // Message above mascot icon (footer)
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && typeof document !== "undefined") {
       // Check if we should show the onboarding message just once
       const showOnboardingMessage = sessionStorage.getItem(
         "showOnboardingMessage"

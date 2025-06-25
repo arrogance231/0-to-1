@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -26,7 +27,7 @@ export default function OnboardingPage() {
 
   // Prevent flash of main app/footer by checking onboardingComplete
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && typeof document !== "undefined") {
       const complete = localStorage.getItem("onboardingComplete");
       if (complete) {
         router.replace("/cases");
@@ -67,7 +68,7 @@ export default function OnboardingPage() {
     if (step === 3) {
       // Redirect to /cases after onboarding
       setTimeout(() => {
-        if (typeof window !== "undefined") {
+        if (typeof window !== "undefined" && typeof document !== "undefined") {
           sessionStorage.setItem("showOnboardingMessage", "true");
         }
         router.replace("/cases");

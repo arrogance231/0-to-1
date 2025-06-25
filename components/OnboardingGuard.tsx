@@ -13,7 +13,7 @@ export default function OnboardingGuard({ children }: OnboardingGuardProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && typeof document !== "undefined") {
       const complete = localStorage.getItem(ONBOARDING_KEY);
       const isOnboarding = pathname === "/onboarding";
 

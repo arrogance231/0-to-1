@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 export default function ThemeInitializer() {
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && typeof document !== "undefined") {
       const stored = localStorage.getItem("theme");
       const root = document.documentElement;
       if (stored === "dark") {

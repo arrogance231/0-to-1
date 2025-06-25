@@ -1,6 +1,7 @@
 "use client";
 import { useChat } from "@/contexts/ChatContext";
 import Image from "next/image";
+import { useEffect, useRef } from "react";
 
 interface StatItemProps {
   icon: string;
@@ -17,45 +18,119 @@ const StatItem: React.FC<StatItemProps> = ({ icon, value, color }) => {
   );
 };
 
+const TopbarProgress = () => {
+  const progressRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number | null>(null);
+
+  // Animate the bar width
+  const start = () => {
+    if (progressRef.current) {
+      progressRef.current.style.width = "0%";
+      progressRef.current.style.opacity = "1";
+      let width = 0;
+      const animate = () => {
+        if (width < 90) {
+          width += Math.random() * 10;
+          progressRef.current!.style.width = `${Math.min(width, 90)}%`;
+          animationRef.current = requestAnimationFrame(animate);
+        }
+      };
+      animate();
+    }
+  };
+
+  // Complete the bar
+  const finish = () => {
+    if (progressRef.current) {
+      progressRef.current.style.width = "100%";
+      setTimeout(() => {
+        if (progressRef.current) {
+          progressRef.current.style.opacity = "0";
+          progressRef.current.style.width = "0%";
+        }
+      }, 300);
+    }
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    // Listen for route changes
+    const handleStart = () => start();
+    const handleComplete = () => finish();
+    window.addEventListener("routeChangeStart", handleStart);
+    window.addEventListener("routeChangeComplete", handleComplete);
+    window.addEventListener("routeChangeError", handleComplete);
+    return () => {
+      window.removeEventListener("routeChangeStart", handleStart);
+      window.removeEventListener("routeChangeComplete", handleComplete);
+      window.removeEventListener("routeChangeError", handleComplete);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={progressRef}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        height: 3,
+        width: "0%",
+        background: "linear-gradient(90deg, #279FD5 0%, #FACC15 100%)",
+        zIndex: 9999,
+        transition: "width 0.2s ease, opacity 0.3s ease",
+        opacity: 0,
+        pointerEvents: "none",
+      }}
+    />
+  );
+};
+
 const ChatNavBar = () => {
   const { stats } = useChat();
 
   return (
-    <nav className='bg-[#1E4462] shadow-lg z-50 px-4 py-2 w-full'>
-      <div className='flex items-center justify-between'>
-        {/* Left side - M icon */}
-        <div className='flex items-center justify-center w-8 h-8 bg-[#279FD5] rounded-full'>
-          <span className='text-white font-bold'>M</span>
-        </div>
+    <>
+      <TopbarProgress />
+      <nav className='bg-[#1E4462] shadow-lg z-50 px-4 py-2 w-full'>
+        <div className='flex items-center justify-between'>
+          {/* Left side - M icon */}
+          <div className='flex items-center justify-center w-8 h-8 bg-[#279FD5] rounded-full'>
+            <span className='text-white font-bold'>M</span>
+          </div>
 
-        {/* Center - Logo */}
-        <div className='flex items-center gap-2'>
-          <Image src='/icon.svg' alt='logo' width={32} height={32} />
-          <span className='text-white font-semibold text-lg'>
-            Pocket<span className='text-[#EC5638]'>Patient</span>
-          </span>
-        </div>
+          {/* Center - Logo */}
+          <div className='flex items-center gap-2'>
+            <Image src='/icon.svg' alt='logo' width={32} height={32} />
+            <span className='text-white font-semibold text-lg'>
+              Pocket<span className='text-[#EC5638]'>Patient</span>
+            </span>
+          </div>
 
-        {/* Right side - Stats */}
-        <div className='flex items-center gap-3'>
-          <StatItem
-            icon='/cross.svg'
-            value={stats.points}
-            color='text-blue-400'
-          />
-          <StatItem
-            icon='/flame.svg'
-            value={stats.cases}
-            color='text-orange-400'
-          />
-          <StatItem
-            icon='/heart.svg'
-            value={stats.lives}
-            color='text-red-500'
-          />
+          {/* Right side - Stats */}
+          <div className='flex items-center gap-3'>
+            <StatItem
+              icon='/cross.svg'
+              value={stats.points}
+              color='text-blue-400'
+            />
+            <StatItem
+              icon='/flame.svg'
+              value={stats.cases}
+              color='text-orange-400'
+            />
+            <StatItem
+              icon='/heart.svg'
+              value={stats.lives}
+              color='text-red-500'
+            />
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 };
 

@@ -1,3 +1,5 @@
+"use client";
+export const dynamic = "force-dynamic";
 import React, { Suspense } from "react";
 import CallToAction from "@/components/CallToAction";
 import ClinicalTopics from "@/components/ClinicalTopics";
