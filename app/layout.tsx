@@ -4,6 +4,7 @@ import "./globals.css";
 import { ChatProvider } from "@/contexts/ChatContext";
 import { ReactNode } from "react";
 import Background from "@/components/Background";
+import OnboardingGuard from "@/components/OnboardingGuard";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,7 +32,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={`${inter.variable} ${bricolage.variable}`}>
         <Background />
         <div className='relative z-10'>
-          <ChatProvider>{children}</ChatProvider>
+          <ChatProvider>
+            <OnboardingGuard>{children}</OnboardingGuard>
+          </ChatProvider>
         </div>
       </body>
     </html>
