@@ -9,7 +9,7 @@ const Stats = () => {
   return (
     <div className='p-4 rounded-lg'>
       <h2 className='text-xl font-bold text-gray-800 mb-4 font-bricolage'>
-        Your Stats
+        Your Statistics
       </h2>
       <div className='flex flex-wrap justify-center gap-3 mb-3'>
         {/* Day Streak */}
