@@ -41,11 +41,11 @@ export default function SettingsPage() {
   // On mount, read theme from localStorage and apply
   useEffect(() => {
     const stored = localStorage.getItem("theme");
-    let initial = stored || "system";
+    const initial = stored || "system";
     setTheme(initial);
     applyTheme(initial);
     // Listen for system theme changes if "system" is selected
-    const listener = (e: MediaQueryListEvent) => {
+    const listener = () => {
       if (theme === "system") {
         applyTheme("system");
       }
@@ -90,7 +90,7 @@ export default function SettingsPage() {
         </div>
         <button
           className='mobile-button-secondary w-full mt-2'
-          onClick={() => setEditing((e) => !e)}
+          onClick={() => setEditing((editing) => !editing)}
         >
           {editing ? "Cancel" : "Edit Profile"}
         </button>
