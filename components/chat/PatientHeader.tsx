@@ -15,7 +15,7 @@ const PatientHeader = () => {
   return (
     <div className='bg-[#279FD5] p-4 rounded-xl flex items-center gap-4 text-white'>
       <div className='relative flex-shrink-0'>
-        <div className='w-16 h-16 rounded-full flex items-center justify-center border-2 border-white'>
+        <div className='w-20 h-20 rounded-full flex items-center justify-center border-2 border-white'>
           <span className='text-sm font-semibold text-center text-white font-sans'>
             {patientInfo.avatarText}
           </span>

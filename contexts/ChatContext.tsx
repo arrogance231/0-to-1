@@ -27,6 +27,8 @@ interface ChatContextType {
   isLoading: boolean;
   isStateLoaded: boolean;
   notes: string;
+  sessionStartTime: number | null;
+  evaluations: ("good" | "bad" | "neutral")[];
   selectCase: (caseData: Case) => void;
   addMessage: (message: Message) => void;
   updateStats: (evaluation: "good" | "bad" | "neutral") => void;
@@ -34,6 +36,7 @@ interface ChatContextType {
   setCustomPatient: (patient: Case) => void;
   updateNotes: (notes: string) => void;
   clearChat: () => void;
+  getSessionTime: () => number; // returns session time in minutes
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -57,16 +60,29 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isStateLoaded, setIsStateLoaded] = useState(false);
   const [notes, setNotes] = useState("");
+  const [sessionStartTime, setSessionStartTime] = useState<number | null>(null);
+  const [evaluations, setEvaluations] = useState<
+    ("good" | "bad" | "neutral")[]
+  >([]);
 
   useEffect(() => {
     try {
       const savedState = sessionStorage.getItem("chatState");
       if (savedState) {
-        const { stats, messages, patient, notes } = JSON.parse(savedState);
+        const {
+          stats,
+          messages,
+          patient,
+          notes,
+          sessionStartTime,
+          evaluations,
+        } = JSON.parse(savedState);
         if (stats) setStats(stats);
         if (messages) setMessages(messages);
         if (patient) setPatient(patient);
         if (notes) setNotes(notes);
+        if (sessionStartTime) setSessionStartTime(sessionStartTime);
+        if (evaluations) setEvaluations(evaluations);
       }
     } catch (error) {
       console.error("Failed to load chat state from sessionStorage:", error);
@@ -82,15 +98,19 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         messages,
         patient,
         notes,
+        sessionStartTime,
+        evaluations,
       };
       sessionStorage.setItem("chatState", JSON.stringify(chatState));
     } catch (error) {
       console.error("Failed to save chat state to sessionStorage:", error);
     }
-  }, [stats, messages, patient, notes]);
+  }, [stats, messages, patient, notes, sessionStartTime, evaluations]);
 
   const selectCase = (caseData: Case) => {
     setPatient(caseData);
+    setSessionStartTime(Date.now());
+    setEvaluations([]);
     setMessages([
       {
         sender: "patient",
@@ -108,6 +128,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateStats = (evaluation: "good" | "bad" | "neutral") => {
+    setEvaluations((prev) => [...prev, evaluation]);
     if (evaluation === "bad") {
       setStats((prev) => ({
         ...prev,
@@ -121,6 +142,8 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
 
   const setCustomPatient = (patient: Case) => {
     setPatient(patient);
+    setSessionStartTime(Date.now());
+    setEvaluations([]);
     setMessages([
       {
         sender: "patient",
@@ -137,10 +160,17 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     setNotes(notes);
   };
 
+  const getSessionTime = (): number => {
+    if (!sessionStartTime) return 0;
+    return Math.floor((Date.now() - sessionStartTime) / (1000 * 60)); // Convert to minutes
+  };
+
   const clearChat = () => {
     setMessages([]);
     setPatient(null);
     setNotes("");
+    setSessionStartTime(null);
+    setEvaluations([]);
     sessionStorage.removeItem("chatState");
   };
 
@@ -153,6 +183,8 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         isLoading,
         isStateLoaded,
         notes,
+        sessionStartTime,
+        evaluations,
         selectCase,
         addMessage,
         updateStats,
@@ -160,6 +192,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         setCustomPatient,
         updateNotes,
         clearChat,
+        getSessionTime,
       }}
     >
       {children}

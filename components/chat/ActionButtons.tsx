@@ -4,11 +4,13 @@ import Image from "next/image";
 interface ActionButtonsProps {
   onCustomPatientClick: () => void;
   onNoteTakingClick: () => void;
+  onSubmitDiagnosisClick: () => void;
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({
   onCustomPatientClick,
   onNoteTakingClick,
+  onSubmitDiagnosisClick,
 }) => {
   return (
     <div className='grid grid-cols-3 gap-3 my-4 w-full'>
@@ -36,7 +38,10 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         />
         <span>Note Taking</span>
       </button>
-      <button className='bg-[#b5442b] text-white p-3 rounded-xl flex flex-col items-center justify-center gap-2 font-semibold text-sm transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95'>
+      <button
+        onClick={onSubmitDiagnosisClick}
+        className='bg-[#b5442b] text-white p-3 rounded-xl flex flex-col items-center justify-center gap-2 font-semibold text-sm transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95'
+      >
         <Image
           src='/submit-diagnosis.svg'
           alt='Submit Diagnosis'

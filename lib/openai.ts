@@ -9,7 +9,14 @@ export async function getOpenAIResponse(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ userPrompt, systemPrompt }),
   });
-  if (!response.ok) throw new Error("OpenAI API error");
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    const errorMessage =
+      errorData.error || `HTTP ${response.status}: ${response.statusText}`;
+    throw new Error(`OpenAI API error: ${errorMessage}`);
+  }
+
   const data = await response.json();
   return data.text || "";
 }
@@ -25,7 +32,14 @@ export async function getOpenAITTSUrl(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text, voice, model, speed }),
   });
-  if (!res.ok) throw new Error("OpenAI TTS failed");
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    const errorMessage =
+      errorData.error || `HTTP ${res.status}: ${res.statusText}`;
+    throw new Error(`OpenAI TTS failed: ${errorMessage}`);
+  }
+
   const blob = await res.blob();
   return URL.createObjectURL(blob);
 }

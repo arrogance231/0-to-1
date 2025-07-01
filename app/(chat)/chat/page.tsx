@@ -10,6 +10,7 @@ import { getOpenAIResponse } from "@/lib/openai";
 import { useChat } from "@/contexts/ChatContext";
 import CustomPatientModal from "@/components/chat/CustomPatientModal";
 import NoteTakingModal from "@/components/chat/NoteTakingModal";
+import SubmitDiagnosisModal from "@/components/chat/SubmitDiagnosisModal";
 import Loading from "@/components/Loading";
 import { Case } from "@/constants/cases";
 
@@ -49,6 +50,8 @@ Now, evaluate the user's latest question and provide the JSON response.
 const ChatPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [isSubmitDiagnosisModalOpen, setIsSubmitDiagnosisModalOpen] =
+    useState(false);
   const {
     messages,
     addMessage,
@@ -60,6 +63,8 @@ const ChatPage = () => {
     setCustomPatient,
     notes,
     updateNotes,
+    evaluations,
+    getSessionTime,
   } = useChat();
   const router = useRouter();
 
@@ -155,6 +160,10 @@ const ChatPage = () => {
     setIsModalOpen(false);
   };
 
+  const handleSubmitDiagnosis = () => {
+    setIsSubmitDiagnosisModalOpen(true);
+  };
+
   return (
     <>
       <CustomPatientModal
@@ -167,6 +176,16 @@ const ChatPage = () => {
         onClose={() => setIsNoteModalOpen(false)}
         onSave={updateNotes}
         initialNotes={notes}
+      />
+      <SubmitDiagnosisModal
+        isOpen={isSubmitDiagnosisModalOpen}
+        onClose={() => setIsSubmitDiagnosisModalOpen(false)}
+        patientName={patient?.patientInfo.name || ""}
+        sessionTime={getSessionTime()}
+        evaluations={evaluations}
+        conversationHistory={messages
+          .map((m) => `${m.sender}: ${m.text}`)
+          .join("\n")}
       />
       <div className='flex flex-col h-screen max-h-screen min-h-0 bg-transparent relative pt-16 pb-36 overflow-hidden'>
         <div className='flex-1 min-h-0 flex flex-col items-center justify-center w-full'>
@@ -192,6 +211,7 @@ const ChatPage = () => {
             <ActionButtons
               onCustomPatientClick={() => setIsModalOpen(true)}
               onNoteTakingClick={() => setIsNoteModalOpen(true)}
+              onSubmitDiagnosisClick={handleSubmitDiagnosis}
             />
           </div>
           <ChatMessages messages={messages} isLoading={isLoading} />

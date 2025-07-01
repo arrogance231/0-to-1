@@ -191,7 +191,7 @@ const Footer: React.FC<FooterProps> = ({ isFixed = true }) => {
             </div>
             {/* Mascot button (z-20, above cutout) */}
             <button
-              className='relative bg-white rounded-full shadow-none p-2 flex items-center justify-center border-4 border-white focus:outline-none focus:ring-2 focus:ring-blue-200 transition hover:scale-105 hover:animate-bounce active:scale-95 z-20'
+              className='relative bg-white rounded-full shadow-lg p-2 flex items-center justify-center border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition hover:scale-105 active:scale-95 z-20'
               style={{ width: 80, height: 80 }}
               aria-label='PocketPatient Home'
             >
