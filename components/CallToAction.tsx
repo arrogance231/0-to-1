@@ -3,12 +3,14 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import NewPatientModal from "./NewPatientModal";
 
-const CallToAction = () => {
+interface CallToActionProps {
+  setModalOpen: (open: boolean) => void;
+}
+
+const CallToAction: React.FC<CallToActionProps> = ({ setModalOpen }) => {
   const [hasHistory, setHasHistory] = useState(false);
   const [lastPatient, setLastPatient] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined" && typeof document !== "undefined") {
@@ -66,7 +68,7 @@ const CallToAction = () => {
         ) : (
           <button
             className={`bg-white text-[#279FD5] font-semibold px-6 py-2 my-4 rounded-lg hover:bg-gray-100 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-sans flex items-center gap-2`}
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => setModalOpen(true)}
           >
             New Patient Practice
           </button>
@@ -82,11 +84,6 @@ const CallToAction = () => {
       <div className='absolute bottom-4 right-4 animate-bounce'>
         <Image src='/orange.svg' alt='orange' width={30} height={30} />
       </div>
-
-      <NewPatientModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
     </div>
   );
 };

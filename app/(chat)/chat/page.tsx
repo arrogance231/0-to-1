@@ -236,7 +236,9 @@ const ChatPage = () => {
             </div>
           </div>
         </div>
-        <Footer isFixed={true} />
+        {!(isModalOpen || isNoteModalOpen || isSubmitDiagnosisModalOpen) && (
+          <Footer isFixed={true} />
+        )}
       </div>
     </>
   );

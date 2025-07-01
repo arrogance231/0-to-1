@@ -1,6 +1,6 @@
+"use client";
 import NavBar from "@/components/NavBar";
-import Footer from "@/components/Footer";
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 export default function MainLayout({ children }: { children: ReactNode }) {
   return (
@@ -8,7 +8,6 @@ export default function MainLayout({ children }: { children: ReactNode }) {
       <div className='w-full max-w-md mx-auto px-4 pt-6 pb-36 space-y-6 rounded-3xl min-h-screen'>
         <NavBar />
         <main className='flex-1 pt-16 pb-20'>{children}</main>
-        <Footer />
       </div>
     </>
   );

@@ -74,7 +74,9 @@ const ClinicPage = () => {
           />
         </div>
       </div>
-      <Footer />
+      {!(isModalOpen || isNoteModalOpen || isSubmitDiagnosisModalOpen) && (
+        <Footer />
+      )}
 
       {/* Modals */}
       <CustomPatientModal

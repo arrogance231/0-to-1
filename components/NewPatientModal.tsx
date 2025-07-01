@@ -59,7 +59,14 @@ const NewPatientModal: React.FC<NewPatientModalProps> = ({
 
   return (
     <div className='fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-2 sm:p-4'>
-      <div className='bg-white rounded-2xl max-w-sm w-full p-4 sm:p-6'>
+      <div className='bg-white rounded-2xl max-w-sm w-full p-4 sm:p-6 relative'>
+        <button
+          className='absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-2xl font-bold focus:outline-none z-10'
+          onClick={onClose}
+          aria-label='Close'
+        >
+          &times;
+        </button>
         <div className='text-center mb-6'>
           <h2 className='text-lg font-bold mb-1'>New Patient</h2>
           <p className='text-sm text-gray-600'>
