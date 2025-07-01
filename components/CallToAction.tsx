@@ -3,10 +3,12 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import NewPatientModal from "./NewPatientModal";
 
 const CallToAction = () => {
   const [hasHistory, setHasHistory] = useState(false);
   const [lastPatient, setLastPatient] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined" && typeof document !== "undefined") {
@@ -49,19 +51,26 @@ const CallToAction = () => {
               }.`
             : "Sharpen your diagnostic skills with AI patients."}
         </p>
-        <Link href={hasHistory ? "/chat" : "/cases"}>
-          <button
-            className={`bg-white text-[#279FD5] font-semibold px-6 py-2 my-4 rounded-lg hover:bg-gray-100 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-sans flex items-center gap-2`}
-          >
-            {hasHistory && (
+        {hasHistory ? (
+          <Link href='/chat'>
+            <button
+              className={`bg-white text-[#279FD5] font-semibold px-6 py-2 my-4 rounded-lg hover:bg-gray-100 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-sans flex items-center gap-2`}
+            >
               <span
                 className='inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse'
                 title='Session in progress'
               ></span>
-            )}
-            {hasHistory ? "Continue Session" : "New Patient Practice"}
+              Continue Session
+            </button>
+          </Link>
+        ) : (
+          <button
+            className={`bg-white text-[#279FD5] font-semibold px-6 py-2 my-4 rounded-lg hover:bg-gray-100 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl font-sans flex items-center gap-2`}
+            onClick={() => setIsModalOpen(true)}
+          >
+            New Patient Practice
           </button>
-        </Link>
+        )}
       </div>
 
       {/* Top-right decoration */}
@@ -73,6 +82,11 @@ const CallToAction = () => {
       <div className='absolute bottom-4 right-4 animate-bounce'>
         <Image src='/orange.svg' alt='orange' width={30} height={30} />
       </div>
+
+      <NewPatientModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };

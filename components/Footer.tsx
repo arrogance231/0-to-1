@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 
 interface FooterProps {
@@ -81,6 +81,7 @@ const TopbarProgress = () => {
 
 const Footer: React.FC<FooterProps> = ({ isFixed = true }) => {
   const pathname = usePathname();
+  const router = useRouter();
   const [casesMessage, setCasesMessage] = useState<string>("");
 
   useEffect(() => {
@@ -128,18 +129,6 @@ const Footer: React.FC<FooterProps> = ({ isFixed = true }) => {
         className={`${baseClasses} ${fixedClasses}`}
         style={{ minHeight: 88 }}
       >
-        {/* SVG cutout at the top center */}
-        <div className='absolute left-1/2 -translate-x-1/2 -top-8 w-32 h-8 z-20 pointer-events-none select-none'>
-          <svg
-            width='100%'
-            height='100%'
-            viewBox='0 0 128 32'
-            fill='none'
-            xmlns='http://www.w3.org/2000/svg'
-          >
-            <path d='M0 0 Q64 40 128 0 V32 H0 V0Z' fill='#fff' />
-          </svg>
-        </div>
         <div className='relative flex items-center justify-between px-4 py-2'>
           {/* Cases nav item (left) */}
           <div className='flex flex-1 justify-start'>
@@ -168,32 +157,18 @@ const Footer: React.FC<FooterProps> = ({ isFixed = true }) => {
             </Link>
           </div>
           {/* Mascot icon in the center as a button to home, visually embedded */}
-          <div className='absolute left-1/2 -translate-x-1/2 -top-8 z-30 flex flex-col items-center'>
+          <div className='absolute left-1/2 -translate-x-1/2 -top-6 sm:-top-8 z-30 flex flex-col items-center w-[72px] sm:w-auto'>
             {casesMessage && (
               <div className='mb-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold shadow text-center whitespace-nowrap max-w-xs truncate border border-blue-100'>
                 {casesMessage}
               </div>
             )}
-            {/* Circular cutout background (z-10, behind mascot) */}
-            <div
-              className='absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-10 pointer-events-none'
-              style={{ width: 92, height: 92 }}
-            >
-              <svg
-                width='92'
-                height='92'
-                viewBox='0 0 92 92'
-                fill='none'
-                xmlns='http://www.w3.org/2000/svg'
-              >
-                <circle cx='46' cy='46' r='46' fill='#fff' />
-              </svg>
-            </div>
             {/* Mascot button (z-20, above cutout) */}
             <button
               className='relative bg-white rounded-full shadow-lg p-2 flex items-center justify-center border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition hover:scale-105 active:scale-95 z-20'
               style={{ width: 80, height: 80 }}
               aria-label='PocketPatient Home'
+              onClick={() => router.push("/")}
             >
               {/* Mascot icon */}
               <Image src='/icon.svg' alt='Mascot' width={56} height={56} />

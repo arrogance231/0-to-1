@@ -40,7 +40,7 @@ const Hero = () => {
               alt='Medical Icon'
               width={320}
               height={320}
-              className='object-contain w-[120px] h-[120px] xs:w-[180px] xs:h-[180px] sm:w-[260px] sm:h-[260px] md:w-[320px] md:h-[320px] max-w-full'
+              className='object-contain w-[120px] h-[120px] xs:w-[180px] xs:h-[180px] sm:w-[260px] sm:h-[260px] md:w-[320px] md:h-[320px] max-w-xs sm:max-w-full'
               priority
             />
           </div>

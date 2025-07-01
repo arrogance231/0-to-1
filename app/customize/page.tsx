@@ -71,14 +71,14 @@ const CustomizePage = () => {
         </div>
       </div>
 
-      <div className='max-w-4xl mx-auto px-4 py-6'>
-        <div className='bg-white rounded-xl shadow-sm border p-6 mb-6'>
+      <div className='max-w-4xl mx-auto px-2 sm:px-4 py-4 sm:py-6'>
+        <div className='bg-white rounded-xl shadow-sm border p-3 sm:p-6 mb-6'>
           <h2 className='text-lg font-semibold text-gray-900 mb-4'>
             Patient Information
           </h2>
 
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-6'>
-            <div>
+            <div className='w-full'>
               <label className='block text-sm font-medium text-gray-700 mb-1'>
                 Name
               </label>
@@ -91,7 +91,7 @@ const CustomizePage = () => {
               />
             </div>
 
-            <div>
+            <div className='w-full'>
               <label className='block text-sm font-medium text-gray-700 mb-1'>
                 Age
               </label>
@@ -104,7 +104,7 @@ const CustomizePage = () => {
               />
             </div>
 
-            <div>
+            <div className='w-full'>
               <label className='block text-sm font-medium text-gray-700 mb-1'>
                 Gender
               </label>
