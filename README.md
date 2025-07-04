@@ -6,12 +6,12 @@ A web-based medical training platform that lets users practice diagnosing virtua
 
 ## What is this project for?
 
-PocketPatient is designed for medical and nursing students (and curious learners!) who want hands-on practice without real-world risk.  A learner chats with a virtual patient, submits their diagnosis, and immediately receives an AI-assessed score plus actionable feedback across the following domains:
+PocketPatient is designed for medical and nursing students (and curious learners!) who want hands-on practice without real-world risk. A learner chats with a virtual patient, submits their diagnosis, and immediately receives an AI-assessed score plus actionable feedback across the following domains:
 
-* Session time
-* Diagnosis accuracy
-* Procedural thoroughness
-* Medical ethics
+- Session time
+- Diagnosis accuracy
+- Procedural thoroughness
+- Medical ethics
 
 The app gamifies improvement with leaderboards, percentile charts, and difficulty settings so users can track progress over time.
 
@@ -31,7 +31,6 @@ The app gamifies improvement with leaderboards, percentile charts, and difficult
 
    Copy `.env.example` to `.env.local` and fill in the required keys (e.g. OpenAI API key for chat and TTS endpoints).
    OPENAI_API_KEY="YOUR-OPENAI-KEY"
-   
 
 3. **Run the dev server**
 
@@ -52,7 +51,7 @@ The app gamifies improvement with leaderboards, percentile charts, and difficult
 
 ```
 ├─ app/                 # Next.js App Router routes
-│  ├─ (main)/           # Public-facing pages grouped with route 
+│  ├─ (main)/           # Public-facing pages grouped with route
 │
 ├─ components/          # Reusable UI components
 │  ├─ chat/             # Chat interface & modals (messages, submit, etc.)
@@ -73,9 +72,9 @@ Feel free to explore each folder—most application logic lives in `components` 
 
 ### Contributions
 
-- Arjhine A. Ty – Lead Developer
-- Sean Matthew L. Viacrusis – Business Expert
-- Niña Alrica L. Viacrusis – Designer and Marketing Expert
+- Arjhine A. Ty – Full Stack Developer
+- Sean Matthew L. Viacrusis – Ideation & Business Lead
+- Niña Alrica L. Viacrusis – UI/UX Designer & Marketing Specialist
 
 ---
 
