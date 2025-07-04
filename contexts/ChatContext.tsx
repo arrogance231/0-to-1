@@ -111,36 +111,16 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     setPatient(caseData);
     setSessionStartTime(Date.now());
     setEvaluations([]);
-    // If this is Aling Nena's case, prepend a user greeting before the patient's first reply
-    if (caseData.id === "case-aling-nena") {
-      const now = new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-      setMessages([
-        {
-          sender: "user",
-          text: "Ano po ang problema nay? Bat po kayo dinala sa ospital.",
-          time: now,
-        },
-        {
-          sender: "patient",
-          text: caseData.initialPrompt,
-          time: now,
-        },
-      ]);
-    } else {
-      setMessages([
-        {
-          sender: "patient",
-          text: caseData.initialPrompt,
-          time: new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-        },
-      ]);
-    }
+    setMessages([
+      {
+        sender: "patient",
+        text: caseData.initialPrompt,
+        time: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      },
+    ]);
   };
 
   const addMessage = (message: Message) => {
@@ -164,36 +144,16 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     setPatient(patient);
     setSessionStartTime(Date.now());
     setEvaluations([]);
-    // If the custom patient is Aling Nena, include the practitioner's greeting first
-    if (patient.id === "case-aling-nena") {
-      const now = new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-      setMessages([
-        {
-          sender: "user",
-          text: "Ano po ang problema nay? Bat po kayo dinala sa ospital.",
-          time: now,
-        },
-        {
-          sender: "patient",
-          text: patient.initialPrompt,
-          time: now,
-        },
-      ]);
-    } else {
-      setMessages([
-        {
-          sender: "patient",
-          text: patient.initialPrompt,
-          time: new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-        },
-      ]);
-    }
+    setMessages([
+      {
+        sender: "patient",
+        text: patient.initialPrompt,
+        time: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      },
+    ]);
   };
 
   const updateNotes = (notes: string) => {
