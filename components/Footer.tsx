@@ -165,8 +165,8 @@ const Footer: React.FC<FooterProps> = ({ isFixed = true }) => {
             )}
             {/* Mascot button (z-20, above cutout) */}
             <button
-              className='relative bg-white rounded-full shadow-lg p-2 flex items-center justify-center border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition hover:scale-105 active:scale-95 z-20'
-              style={{ width: 80, height: 80 }}
+              className='relative bg-white rounded-full shadow-lg p-2 flex items-center justify-center border-2 border-orange-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition hover:scale-105 active:scale-95 z-20'
+              style={{ width: 80, height: 80, boxShadow: '0 0 0 4px #FFA50055' }}
               aria-label='PocketPatient Home'
               onClick={() => router.push("/")}
             >
@@ -174,7 +174,7 @@ const Footer: React.FC<FooterProps> = ({ isFixed = true }) => {
               <Image src='/icon.svg' alt='Mascot' width={56} height={56} />
             </button>
           </div>
-          {/* Settings nav item (right) */}
+          {/* Settings nav item (right) */} 
           <div className='flex flex-1 justify-end'>
             <Link
               href={navItems[1].href}

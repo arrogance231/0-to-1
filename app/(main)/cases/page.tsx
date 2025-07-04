@@ -46,7 +46,7 @@ const CaseCard = ({ caseData }: { caseData: Case }) => {
   };
 
   return (
-    <div className='rounded-2xl overflow-hidden shadow-md border border-gray-200 flex flex-col bg-white'>
+    <div className='rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl border border-gray-200 flex flex-col bg-white transition-shadow duration-300'>
       {/* Colored header */}
       <div
         className={`h-20 w-full bg-gradient-to-br ${
@@ -73,7 +73,7 @@ const CaseCard = ({ caseData }: { caseData: Case }) => {
         </p>
         <button
           onClick={handleStartCase}
-          className='bg-[#279FD5] text-white font-semibold w-full py-2 rounded-lg hover:bg-[#1E4462] transition-all duration-200 mt-auto text-base font-sans'
+          className='bg-[#279FD5] text-white font-semibold w-full py-2 rounded-lg hover:bg-[#1E4462] active:bg-[#15304a] transition-all duration-200 mt-auto text-base font-sans transform active:scale-98'
         >
           Start
         </button>
@@ -266,7 +266,7 @@ const CasesPage = () => {
   return (
     <>
       <Suspense fallback={<Loading />}>
-        <div className='p-4 space-y-6'>
+        <div className='w-full max-w-6xl mx-auto px-2 sm:px-4 md:px-8 pt-6 pb-32 space-y-6'>
           <div className='flex justify-end mb-2'>
             <button
               onClick={handleResetOnboarding}

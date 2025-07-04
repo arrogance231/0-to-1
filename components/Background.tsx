@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
 const MOBILE_CIRCLES = 10;
@@ -44,6 +44,34 @@ function generateCircles(desktop: boolean) {
 
 const Background: React.FC = () => {
   const [circles, setCircles] = useState<Circle[]>([]);
+  const [gradientAngle, setGradientAngle] = useState(0);
+  const parallaxRef = useRef<HTMLDivElement>(null);
+
+  // Animate gradient
+  useEffect(() => {
+    let raf: number;
+    const animate = () => {
+      setGradientAngle((a) => (a + 0.1) % 360);
+      raf = requestAnimationFrame(animate);
+    };
+    raf = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  // Parallax effect
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!parallaxRef.current) return;
+      const { innerWidth, innerHeight } = window;
+      const x = (e.clientX / innerWidth - 0.5) * 2; // -1 to 1
+      const y = (e.clientY / innerHeight - 0.5) * 2;
+      parallaxRef.current.style.setProperty("--parallax-x", `${x}`);
+      parallaxRef.current.style.setProperty("--parallax-y", `${y}`);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   useEffect(() => {
     const isDesktop = () => {
       if (typeof window === "undefined") return false;
@@ -61,8 +89,15 @@ const Background: React.FC = () => {
   }, []);
 
   return (
-    <div className='absolute inset-0 w-full h-full z-0 pointer-events-none select-none'>
-      {/* Blue background */}
+    <div
+      ref={parallaxRef}
+      className='fixed inset-0 w-screen h-screen z-0 pointer-events-none select-none'
+      style={{
+        background: `linear-gradient(${gradientAngle}deg, #e0f2fe 0%, #f3fafb 100%)`,
+        transition: 'background 0.5s',
+      }}
+    >
+      {/* Blue background SVG overlay */}
       <Image
         src='/bg-empty.svg'
         alt='Background'
@@ -71,30 +106,35 @@ const Background: React.FC = () => {
         className='z-0'
         priority
       />
-      {/* Floating circles (only after mount) */}
-      {circles.map(({ size, left, top, anim, key, opacity }) => (
-        <div
-          key={key}
-          style={{
-            position: "absolute",
-            left: `${left}%`,
-            top: `${top}%`,
-            width: size,
-            height: size,
-            zIndex: 2,
-            animation: anim,
-            opacity,
-          }}
-        >
-          <Image
-            src='/circle.svg'
-            alt='Floating Circle'
-            width={size}
-            height={size}
-            style={{ opacity: 1, width: "100%", height: "100%" }}
-          />
-        </div>
-      ))}
+      {/* Floating circles (parallax) */}
+      {circles.map(({ size, left, top, anim, key, opacity }, i) => {
+        // Parallax: each circle moves at a different rate
+        const parallaxDepth = 1 + (i % 5) * 0.15; // 1 to 1.6
+        return (
+          <div
+            key={key}
+            style={{
+              position: "absolute",
+              left: `calc(${left}% + (var(--parallax-x, 0) * ${10 * parallaxDepth}px))`,
+              top: `calc(${top}% + (var(--parallax-y, 0) * ${10 * parallaxDepth}px))`,
+              width: size,
+              height: size,
+              zIndex: 2,
+              animation: anim,
+              opacity,
+              transition: 'left 0.2s, top 0.2s',
+            }}
+          >
+            <Image
+              src='/circle.svg'
+              alt='Floating Circle'
+              width={size}
+              height={size}
+              style={{ opacity: 1, width: "100%", height: "100%" }}
+            />
+          </div>
+        );
+      })}
       {/* Wavy cutter at the bottom */}
       <div className='absolute left-0 w-full z-10' style={{ bottom: 0 }}>
         <Image
