@@ -196,6 +196,25 @@ const ChatPage = () => {
     };
 
     addMessage(userMessage);
+
+    // If this is the very first message (chat was empty), append patient's initial prompt as a pseudo-reply
+    if (messages.length === 0) {
+      const patientReply: Message = {
+        sender: "patient",
+        text: patient.initialPrompt,
+        time: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      };
+      setIsLoading(true);
+      setTimeout(() => {
+        addMessage(patientReply);
+        setIsLoading(false);
+      }, 5000); // 5-second typing delay
+      return;
+    }
+
     setIsLoading(true);
 
     try {

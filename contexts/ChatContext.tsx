@@ -111,16 +111,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     setPatient(caseData);
     setSessionStartTime(Date.now());
     setEvaluations([]);
-    setMessages([
-      {
-        sender: "patient",
-        text: caseData.initialPrompt,
-        time: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      },
-    ]);
+    setMessages([]);
   };
 
   const addMessage = (message: Message) => {
@@ -144,16 +135,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     setPatient(patient);
     setSessionStartTime(Date.now());
     setEvaluations([]);
-    setMessages([
-      {
-        sender: "patient",
-        text: patient.initialPrompt,
-        time: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      },
-    ]);
+    setMessages([]);
   };
 
   const updateNotes = (notes: string) => {
