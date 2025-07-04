@@ -4,14 +4,14 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import ClinicTTSVisualizer from "@/components/chat/ClinicTTSVisualizer";
 import ActionButtons from "@/components/chat/ActionButtons";
-import Footer from "@/components/Footer";
-import { useChat } from "@/contexts/ChatContext";
 import ChatNavBar from "@/components/chat/ChatNavBar";
 import CustomPatientModal from "@/components/chat/CustomPatientModal";
 import NoteTakingModal from "@/components/chat/NoteTakingModal";
 import SubmitDiagnosisModal from "@/components/chat/SubmitDiagnosisModal";
 import Loading from "@/components/Loading";
 import { Case } from "@/constants/cases";
+import { useChat } from "@/contexts/ChatContext";
+import type { Message } from "@/contexts/ChatContext";
 
 const ClinicPage = () => {
   const router = useRouter();
@@ -62,22 +62,18 @@ const ClinicPage = () => {
   };
 
   return (
-    <div className='flex flex-col h-screen max-h-screen min-h-0 bg-transparent relative pt-16 pb-36 overflow-hidden'>
+    <div className='flex flex-col h-screen w-full min-h-0 bg-transparent relative overflow-hidden'>
       <ChatNavBar />
+      <div className='w-full px-4 pt-2'>
+        <ActionButtons
+          onCustomPatientClick={() => setIsModalOpen(true)}
+          onNoteTakingClick={() => setIsNoteModalOpen(true)}
+          onSubmitDiagnosisClick={handleSubmitDiagnosis}
+        />
+      </div>
       <div className='flex-1 min-h-0 flex flex-col items-center justify-center w-full'>
         <ClinicTTSVisualizer squashContent={true} />
-        <div className='absolute bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-sm border-t border-gray-200'>
-          <ActionButtons
-            onCustomPatientClick={() => setIsModalOpen(true)}
-            onNoteTakingClick={() => setIsNoteModalOpen(true)}
-            onSubmitDiagnosisClick={handleSubmitDiagnosis}
-          />
-        </div>
       </div>
-      {!(isModalOpen || isNoteModalOpen || isSubmitDiagnosisModalOpen) && (
-        <Footer />
-      )}
-
       {/* Modals */}
       <CustomPatientModal
         isOpen={isModalOpen}
@@ -97,7 +93,7 @@ const ClinicPage = () => {
         sessionTime={getSessionTime()}
         evaluations={evaluations}
         conversationHistory={messages
-          .map((m) => `${m.sender}: ${m.text}`)
+          .map((m: Message) => `${m.sender}: ${m.text}`)
           .join("\n")}
       />
     </div>

@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { Case } from "@/constants/cases";
 
-interface Message {
+export interface Message {
   sender: "patient" | "user";
   text: string;
   time: string;

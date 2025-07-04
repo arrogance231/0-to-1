@@ -1,7 +1,8 @@
 "use client";
 import { useChat } from "@/contexts/ChatContext";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface StatItemProps {
   icon: string;
@@ -13,7 +14,7 @@ const StatItem: React.FC<StatItemProps> = ({ icon, value, color }) => {
   return (
     <div className='flex items-center gap-1'>
       <Image src={icon} alt='' width={16} height={16} />
-      <span className={`font-bold text-sm ${color}`}>{value}</span>
+      <span className={`font-bold text-xs sm:text-sm ${color}`}>{value}</span>
     </div>
   );
 };
@@ -91,27 +92,71 @@ const TopbarProgress = () => {
 
 const ChatNavBar = () => {
   const { stats } = useChat();
+  const [userInitials, setUserInitials] = useState("?");
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const onboardingInfo = localStorage.getItem("onboardingInfo");
+      if (onboardingInfo) {
+        const { name } = JSON.parse(onboardingInfo);
+        if (name) {
+          const initials = name
+            .split(" ")
+            .map((n: string) => n[0])
+            .join("")
+            .toUpperCase();
+          setUserInitials(initials);
+        }
+      }
+    }
+  }, []);
 
   return (
     <>
       <TopbarProgress />
-      <nav className='bg-[#1E4462] shadow-lg z-50 px-4 py-2 w-full'>
-        <div className='flex items-center justify-between'>
-          {/* Left side - M icon */}
-          <div className='flex items-center justify-center w-8 h-8 bg-[#279FD5] rounded-full'>
-            <span className='text-white font-bold'>M</span>
+      <nav className='bg-[#1E4462] shadow-lg z-50 py-1 w-full rounded-none sm:rounded-xl'>
+        <div className='flex items-center justify-between px-2 sm:px-6 gap-2 sm:gap-6'>
+          {/* Left side - Back button and User Initials Avatar */}
+          <div className='flex items-center gap-1 sm:gap-2'>
+            <button
+              onClick={() => router.back()}
+              className='p-1 rounded-full hover:bg-[#279FD5]/30 focus:outline-none focus:ring-2 focus:ring-blue-300 transition'
+              aria-label='Back'
+            >
+              <svg
+                width='18'
+                height='18'
+                viewBox='0 0 20 20'
+                fill='none'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <path
+                  d='M13 16L7 10L13 4'
+                  stroke='white'
+                  strokeWidth='2'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                />
+              </svg>
+            </button>
+            <div className='flex items-center justify-center w-7 h-7 bg-[#279FD5] rounded-full'>
+              <span className='text-white font-bold text-base'>
+                {userInitials}
+              </span>
+            </div>
           </div>
 
-          {/* Center - Logo */}
-          <div className='flex items-center gap-2'>
-            <Image src='/icon.svg' alt='logo' width={32} height={32} />
-            <span className='text-white font-semibold text-lg'>
+          {/* Center - Logo and Title */}
+          <div className='flex items-center gap-1 sm:gap-2'>
+            <Image src='/icon.svg' alt='logo' width={24} height={24} />
+            <span className='text-white font-semibold text-base sm:text-lg'>
               Pocket<span className='text-[#EC5638]'>Patient</span>
             </span>
           </div>
 
           {/* Right side - Stats */}
-          <div className='flex items-center gap-3'>
+          <div className='flex items-center gap-2 sm:gap-3'>
             <StatItem
               icon='/cross.svg'
               value={stats.points}

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { clinicalCases, Case } from "@/constants/cases";
 import { useChat } from "@/contexts/ChatContext";
 import Loading from "@/components/Loading";
+import Footer from "@/components/Footer";
 
 const ALL_SPECIALTIES = [
   "Cardiology",
@@ -254,54 +255,57 @@ const CasesPage = () => {
   }, [userSpecialty, tempSpecialty]);
 
   return (
-    <Suspense fallback={<Loading />}>
-      <div className='p-4 space-y-6'>
-        <div className='flex justify-end mb-2'>
-          <button
-            onClick={handleResetOnboarding}
-            className='px-4 py-1 rounded-lg bg-red-100 text-red-600 text-xs font-semibold shadow hover:bg-red-200 transition'
-          >
-            Reset Onboarding
-          </button>
-        </div>
-        <header>
-          <h1 className='text-xl font-bold text-gray-800 mb-2 font-bricolage'>
-            Clinical Cases
-          </h1>
-          <p className='text-sm text-gray-500 font-sans'>
-            Select a case to begin your diagnosis simulation.
-          </p>
-        </header>
-        {tempSpecialty && (
-          <div className='mb-2 flex justify-between items-center'>
-            <span className='text-xs text-blue-700 font-semibold'>
-              Showing cases for <b>{tempSpecialty}</b>
-            </span>
+    <>
+      <Suspense fallback={<Loading />}>
+        <div className='p-4 space-y-6'>
+          <div className='flex justify-end mb-2'>
             <button
-              onClick={handleClearBrowse}
-              className='text-xs text-gray-500 underline hover:text-blue-700'
+              onClick={handleResetOnboarding}
+              className='px-4 py-1 rounded-lg bg-red-100 text-red-600 text-xs font-semibold shadow hover:bg-red-200 transition'
             >
-              Back to recommended
+              Reset Onboarding
             </button>
           </div>
-        )}
-        <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
-          {filteredCases.length > 0 ? (
-            filteredCases.map((caseData) => (
-              <CaseCard key={caseData.id} caseData={caseData} />
-            ))
-          ) : (
-            <div className='col-span-2 text-center text-gray-400 font-sans py-8'>
-              No cases available for your selected specialty.
+          <header>
+            <h1 className='text-xl font-bold text-gray-800 mb-2 font-bricolage'>
+              Clinical Cases
+            </h1>
+            <p className='text-sm text-gray-500 font-sans'>
+              Select a case to begin your diagnosis simulation.
+            </p>
+          </header>
+          {tempSpecialty && (
+            <div className='mb-2 flex justify-between items-center'>
+              <span className='text-xs text-blue-700 font-semibold'>
+                Showing cases for <b>{tempSpecialty}</b>
+              </span>
+              <button
+                onClick={handleClearBrowse}
+                className='text-xs text-gray-500 underline hover:text-blue-700'
+              >
+                Back to recommended
+              </button>
             </div>
           )}
-          <BrowseCard
-            specialties={browseSpecialties}
-            onSelect={handleBrowseSpecialty}
-          />
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
+            {filteredCases.length > 0 ? (
+              filteredCases.map((caseData) => (
+                <CaseCard key={caseData.id} caseData={caseData} />
+              ))
+            ) : (
+              <div className='col-span-2 text-center text-gray-400 font-sans py-8'>
+                No cases available for your selected specialty.
+              </div>
+            )}
+            <BrowseCard
+              specialties={browseSpecialties}
+              onSelect={handleBrowseSpecialty}
+            />
+          </div>
         </div>
-      </div>
-    </Suspense>
+      </Suspense>
+      <Footer />
+    </>
   );
 };
 

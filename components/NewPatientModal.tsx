@@ -8,19 +8,6 @@ interface NewPatientModalProps {
   onClose: () => void;
 }
 
-const getLastSpecialty = () => {
-  if (typeof window !== "undefined") {
-    try {
-      const chatState = sessionStorage.getItem("chatState");
-      if (chatState) {
-        const { patient } = JSON.parse(chatState);
-        if (patient && patient.specialty) return patient.specialty;
-      }
-    } catch {}
-  }
-  return null;
-};
-
 const NewPatientModal: React.FC<NewPatientModalProps> = ({
   isOpen,
   onClose,
@@ -28,18 +15,10 @@ const NewPatientModal: React.FC<NewPatientModalProps> = ({
   const router = useRouter();
 
   const handleRandom = () => {
-    const specialty = getLastSpecialty();
-    let filtered = clinicalCases;
-    if (specialty) {
-      filtered = clinicalCases.filter((c) => c.specialty === specialty);
-    }
-    const randomCase = filtered[Math.floor(Math.random() * filtered.length)];
-    if (randomCase) {
-      // Save to sessionStorage so chat loads this patient
-      sessionStorage.setItem(
-        "chatState",
-        JSON.stringify({ patient: randomCase })
-      );
+    // Always select Aling Nena de Guzman
+    const nenang = clinicalCases.find((c) => c.id === "case-aling-nena");
+    if (nenang) {
+      sessionStorage.setItem("chatState", JSON.stringify({ patient: nenang }));
     }
     router.push("/chat");
     onClose();

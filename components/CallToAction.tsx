@@ -19,10 +19,10 @@ const CallToAction: React.FC<CallToActionProps> = ({ setModalOpen }) => {
         if (chatState) {
           const { messages, patient } = JSON.parse(chatState);
           if (
-            messages &&
-            messages.length > 1 &&
             patient &&
-            patient.patientInfo?.name
+            patient.patientInfo?.name &&
+            messages &&
+            messages.length > 0
           ) {
             setHasHistory(true);
             setLastPatient(patient.patientInfo.name);
