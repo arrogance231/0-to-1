@@ -45,7 +45,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, isLoading }) => {
             </div>
 
             {/* Message text */}
-            <p className='text-sm leading-relaxed'>
+            <p className='text-sm leading-relaxed whitespace-pre-line'>
               {msg.sender === "patient"
                 ? (() => {
                     // Try to extract JSON if present after some text

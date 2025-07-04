@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { useChat } from "@/contexts/ChatContext";
 import { clinicalCases } from "@/constants/cases";
 
 interface NewPatientModalProps {
@@ -14,14 +15,16 @@ const NewPatientModal: React.FC<NewPatientModalProps> = ({
 }) => {
   const router = useRouter();
 
+  const { setCustomPatient } = useChat();
+
   const handleRandom = () => {
     // Always select Aling Nena de Guzman
     const nenang = clinicalCases.find((c) => c.id === "case-aling-nena");
     if (nenang) {
-      sessionStorage.setItem("chatState", JSON.stringify({ patient: nenang }));
+      setCustomPatient(nenang);
+      router.push("/chat");
+      onClose();
     }
-    router.push("/chat");
-    onClose();
   };
 
   const handleCaseStudy = () => {

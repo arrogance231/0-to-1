@@ -84,17 +84,17 @@ Please provide a JSON response with the following structure:
             .replace(/```$/, "")
             .trim();
         }
-        const parsed = JSON.parse(jsonStr);
+        JSON.parse(jsonStr);
         
         // Redirect to evaluation page with score
-        const exerciseId = window.location.pathname.split('/')[2] || 'default';
-        router.push(`/exercise/${exerciseId}/evaluation?score=${parsed.score}&patientName=${encodeURIComponent(patientName)}`);
+        
+        router.push(`/evaluation`);
         onClose();
       } catch (parseError) {
         console.error("Failed to parse AI response:", parseError);
         // Fallback to evaluation page with default score
-        const exerciseId = window.location.pathname.split('/')[2] || 'default';
-        router.push(`/exercise/${exerciseId}/evaluation?score=70&patientName=${encodeURIComponent(patientName)}`);
+        
+        router.push(`/evaluation`);
         onClose();
       }
     } catch (error) {

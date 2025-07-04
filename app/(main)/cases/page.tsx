@@ -179,6 +179,7 @@ const BrowseCard = ({
 };
 
 const CasesPage = () => {
+  const nenangCase = clinicalCases.find((c) => c.id === "case-aling-nena");
   const [specialty, setSpecialty] = useState<string | null>(null);
   const [filteredCases, setFilteredCases] = useState<Case[]>([]);
   const [userSpecialty, setUserSpecialty] = useState<string | null>(null);
@@ -206,6 +207,14 @@ const CasesPage = () => {
       );
     }
   }, [specialty, tempSpecialty]);
+
+    // Compute display list with Aling Nena first
+  const displayCases = nenangCase
+    ? [
+        nenangCase,
+        ...filteredCases.filter((c) => c.id !== "case-aling-nena"),
+      ]
+    : filteredCases;
 
   const handleResetOnboarding = () => {
     if (typeof window !== "undefined") {
@@ -288,9 +297,9 @@ const CasesPage = () => {
             </div>
           )}
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
-            {filteredCases.length > 0 ? (
-              filteredCases.map((caseData) => (
-                <CaseCard key={caseData.id} caseData={caseData} />
+            {displayCases.length > 0 ? (
+               displayCases.map((caseData) => (
+                 <CaseCard key={caseData.id} caseData={caseData} />
               ))
             ) : (
               <div className='col-span-2 text-center text-gray-400 font-sans py-8'>

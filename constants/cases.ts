@@ -87,8 +87,16 @@ export const clinicalCases: Case[] = [
     title: "Aling Nena's Complex Presentation",
     description:
       "A 72-year-old widow presents with multiple complaints including joint pain, cough, fever, and forgetfulness.",
-    initialPrompt:
-      "Check-up daw sabi ng anak ko... pero di ko masyado maintindihan kung bakit eh. Sabi niya inuubo raw ako buong gabi. Matagal na masakit ang tuhod at likod, tapos ngayon inuubo at nilalagnat. Minsan nakakalimot din ako...",
+    initialPrompt: `Check-up daw... sabi ng anak ko.
+Ehh... hindi ko naman talaga alam kung bakit bigla niya akong dinala.
+Ang sabi niya, inuubo raw ako buong gabi... tapos... mainit daw ang katawan ko kahapon.
+
+Ako kasi — sanay na ako sa masakit ’yung tuhod, likod... ganyan. Pero itong ubo?
+Parang hindi natatapos.
+
+Tapos, tilalagnat daw ako... yun lang naman.
+
+Ayoko sana, kaso mapilit si Lisa, eh...`,
     patientInfo: {
       name: "Aling Nena de Guzman",
       details: "Pasiyente / 72 taong gulang / Biyuda",

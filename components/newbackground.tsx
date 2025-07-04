@@ -42,7 +42,7 @@ function generateCircles(desktop: boolean) {
   });
 }
 
-const Background: React.FC = () => {
+const NewBackground: React.FC = () => {
   const [circles, setCircles] = useState<Circle[]>([]);
   useEffect(() => {
     const isDesktop = () => {
@@ -95,17 +95,6 @@ const Background: React.FC = () => {
           />
         </div>
       ))}
-      {/* Wavy cutter at the bottom */}
-      <div className='absolute left-0 w-full z-10' style={{ bottom: 0 }}>
-        <Image
-          src='/bg-cutter.svg'
-          alt='Cutter'
-          width={1920}
-          height={200}
-          style={{ width: "100vw", height: "auto" }}
-          priority
-        />
-      </div>
       {/* Keyframes for floating and drifting animation */}
       <style jsx global>{`
         @keyframes float1 {
@@ -185,4 +174,4 @@ const Background: React.FC = () => {
   );
 };
 
-export default Background;
+export default NewBackground;
