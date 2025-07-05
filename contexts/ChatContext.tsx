@@ -18,6 +18,8 @@ interface Stats {
   points: number;
   cases: number;
   lives: number;
+  dayStreak: number;
+  lastActiveDate: string; // YYYY-MM-DD
 }
 
 interface ChatContextType {
@@ -32,6 +34,7 @@ interface ChatContextType {
   selectCase: (caseData: Case) => void;
   addMessage: (message: Message) => void;
   updateStats: (evaluation: "good" | "bad" | "neutral") => void;
+  applyEvaluation: (casePoints: number, loseLife: boolean) => void;
   setIsLoading: (isLoading: boolean) => void;
   setCustomPatient: (patient: Case) => void;
   updateNotes: (notes: string) => void;
@@ -51,9 +54,11 @@ export const useChat = (): ChatContextType => {
 
 export const ChatProvider = ({ children }: { children: ReactNode }) => {
   const [stats, setStats] = useState<Stats>({
-    points: 1372,
-    cases: 12,
+    points: 0,
+    cases: 0,
     lives: 5,
+    dayStreak: 0,
+    lastActiveDate: new Date().toISOString().split("T")[0],
   });
   const [messages, setMessages] = useState<Message[]>([]);
   const [patient, setPatient] = useState<Case | null>(null);
@@ -64,6 +69,22 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
   const [evaluations, setEvaluations] = useState<
     ("good" | "bad" | "neutral")[]
   >([]);
+
+  // Apply evaluation results from AI (0-200 pts per diagnosis, loseLife flag)
+  const applyEvaluation = (casePoints: number, loseLife: boolean) => {
+    setStats((prev) => {
+      const today = new Date().toISOString().split("T")[0];
+      const newPoints = prev.points + casePoints;
+      return {
+        ...prev,
+        points: newPoints,
+        cases: prev.cases + 1,
+        lives: loseLife ? Math.max(prev.lives - 1, 0) : prev.lives,
+        dayStreak: prev.dayStreak + 1,
+        lastActiveDate: today,
+      };
+    });
+  };
 
   useEffect(() => {
     try {
@@ -101,6 +122,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         sessionStartTime,
         evaluations,
       };
+
       sessionStorage.setItem("chatState", JSON.stringify(chatState));
     } catch (error) {
       console.error("Failed to save chat state to sessionStorage:", error);
@@ -111,7 +133,16 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     setPatient(caseData);
     setSessionStartTime(Date.now());
     setEvaluations([]);
-    setMessages([]);
+    setMessages([
+      {
+        sender: "patient",
+        text: caseData.initialPrompt,
+        time: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      },
+    ]);
   };
 
   const addMessage = (message: Message) => {
@@ -135,7 +166,16 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     setPatient(patient);
     setSessionStartTime(Date.now());
     setEvaluations([]);
-    setMessages([]);
+    setMessages([
+      {
+        sender: "patient",
+        text: patient.initialPrompt,
+        time: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      },
+    ]);
   };
 
   const updateNotes = (notes: string) => {
@@ -170,6 +210,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         selectCase,
         addMessage,
         updateStats,
+        applyEvaluation,
         setIsLoading,
         setCustomPatient,
         updateNotes,

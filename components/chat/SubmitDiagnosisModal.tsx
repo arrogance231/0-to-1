@@ -1,6 +1,23 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useChat } from "@/contexts/ChatContext";
+import DiagnosisResultModal from "./DiagnosisResultModal";
+
+interface EvaluationSummary {
+  correct: string[];
+  incorrect: string[];
+  improvements: string[];
+}
+
+interface EvaluationFeedback {
+  score: number;
+  sessionTimeScore: number;
+  diagnosisAccuracyScore: number;
+  procedureScore: number;
+  ethicsScore: number;
+  summary: EvaluationSummary;
+  overallFeedback: string;
+}
 import { getOpenAIResponse } from "@/lib/openai";
 
 interface SubmitDiagnosisModalProps {
@@ -22,10 +39,16 @@ const SubmitDiagnosisModal: React.FC<SubmitDiagnosisModalProps> = ({
   evaluations,
   conversationHistory,
 }) => {
-  const router = useRouter();
+
   const [diagnosis, setDiagnosis] = useState("");
+  const [feedback, setFeedback] = useState<EvaluationFeedback | null>(null);
+  const [showResult, setShowResult] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { applyEvaluation } = useChat();
   const [error, setError] = useState<string | null>(null);
+
+  const doctorDiagnosis = "Type 2 Diabetes Mellitus with poor glycaemic control"; // TODO: replace with real DB value
 
   const handleSubmit = async () => {
     if (!diagnosis.trim()) return;
@@ -51,7 +74,7 @@ CONSULTATION METRICS:
 - Bad responses: ${badCount}
 - Neutral responses: ${neutralCount}
 
-EVALUATION CRITERIA:
+DOCTOR'S (GROUND TRUTH) DIAGNOSIS:\n${doctorDiagnosis}\n\nEVALUATION CRITERIA:
 1. Session Time (25 points): Appropriate time spent with patient
 2. Diagnosis Accuracy (40 points): Correct identification of condition
 3. Procedure (20 points): Proper diagnostic approach and methodology
@@ -84,18 +107,17 @@ Please provide a JSON response with the following structure:
             .replace(/```$/, "")
             .trim();
         }
-        JSON.parse(jsonStr);
-        
-        // Redirect to evaluation page with score
-        
-        router.push(`/evaluation`);
-        onClose();
+        const parsed: EvaluationFeedback = JSON.parse(jsonStr);
+        setFeedback(parsed);
+        // scale score to 0-200 for case points
+        const casePoints = Math.round((parsed.score ?? 0) * 2);
+        const loseLife = (parsed.score ?? 0) < 60; // threshold for life loss
+        applyEvaluation(casePoints, loseLife);
+        setShowResult(true);
       } catch (parseError) {
         console.error("Failed to parse AI response:", parseError);
-        // Fallback to evaluation page with default score
-        
-        router.push(`/evaluation`);
-        onClose();
+        setFeedback(null);
+        setShowResult(true);
       }
     } catch (error) {
       console.error("Failed to evaluate diagnosis:", error);
@@ -112,7 +134,8 @@ Please provide a JSON response with the following structure:
   if (!isOpen) return null;
 
   return (
-    <div className='fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4'>
+    <> 
+      <div className='fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4'>
       <div className='bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto'>
         <div className='p-6 border-b border-gray-200'>
           <h2 className='text-xl font-bold text-gray-900 mb-2'>
@@ -171,14 +194,24 @@ Please provide a JSON response with the following structure:
             <button
               onClick={handleSubmit}
               disabled={!diagnosis.trim() || isSubmitting}
-              className='flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50'
-            >
+              className='flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50'>
               {isSubmitting ? "Evaluating..." : "Submit & Evaluate"}
             </button>
           </div>
         </div>
       </div>
-    </div>
+      </div>
+      {/* Result modal */}
+      <DiagnosisResultModal
+        isOpen={showResult}
+        onClose={() => {
+          setShowResult(false);
+          setFeedback(null);
+          onClose();
+        }}
+        feedback={feedback}
+      />
+    </>
   );
 };
 

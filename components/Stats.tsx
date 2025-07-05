@@ -23,7 +23,7 @@ const Stats = () => {
               className='w-7 h-7'
             />
           </span>
-          <span className='text-xl font-bold text-center'>12</span>
+          <span className='text-xl font-bold text-center'>{stats.dayStreak}</span>
           <span className='text-xs opacity-90 mt-1 text-center'>
             Day Streak
           </span>
@@ -106,12 +106,14 @@ const Stats = () => {
       <div className='flex flex-wrap justify-center gap-3 w-full'>
         {/* Cases Completed */}
         <div className='flex-1 min-w-[120px] max-w-[200px] bg-gray-200 rounded-xl p-3 flex flex-col items-center'>
-          <span className='text-xl font-bold text-[#1E4462]'>28</span>
+          <span className='text-xl font-bold text-[#1E4462]'>{stats.cases}</span>
           <span className='text-xs text-gray-600 mt-1'>Cases Completed</span>
         </div>
         {/* Avg. Accuracy */}
         <div className='flex-1 min-w-[120px] max-w-[200px] bg-gray-200 rounded-xl p-3 flex flex-col items-center'>
-          <span className='text-xl font-bold text-[#1E4462]'>87%</span>
+          <span className='text-xl font-bold text-[#1E4462]'>
+            {stats.cases === 0 ? "0%" : `${Math.round((stats.points / (stats.cases * 200)) * 100)}%`}
+          </span>
           <span className='text-xs text-gray-600 mt-1'>Avg. Accuracy</span>
         </div>
       </div>
